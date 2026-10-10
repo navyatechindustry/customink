@@ -5,8 +5,7 @@
   "description": "Custom Ink Luxembourg - Tattoo and Piercing Studio",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node ./_build/export_reviews.js",
-    "build": "node ./_build/export_reviews.js && node ./node_modules/typescript/bin/tsc && node ./node_modules/vite/bin/vite.js build",
+    "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {

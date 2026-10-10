@@ -2,8 +2,6 @@
    CUSTOM INK LUXEMBOURG — interactions
    nav / reveals / filters / lightbox / form / concierge / analytics
    ============================================================ */
-import { reviews as datasetReviews } from './reviews-data.js';
-
 (function () {
   'use strict';
 
@@ -133,9 +131,11 @@ import { reviews as datasetReviews } from './reviews-data.js';
       if (acceptBtn) {
         saveConsent(true);
         removePopup();
+        window.location.href = 'terms.html';
       } else if (denyBtn) {
         saveConsent(false);
         removePopup();
+        window.location.href = 'terms.html';
       }
     });
 
@@ -275,7 +275,7 @@ import { reviews as datasetReviews } from './reviews-data.js';
     var it = lbList[lbIdx];
     if (!it) return;
     var img = $('img', it);
-    lbImg.src = img.getAttribute('src');
+    lbImg.src = img.currentSrc || img.getAttribute('src');
     lbImg.alt = img.getAttribute('alt') || '';
     lbTitle.innerHTML = it.getAttribute('data-title') || '';
     lbMeta.innerHTML = [it.getAttribute('data-style'), it.getAttribute('data-place')]
@@ -540,10 +540,14 @@ import { reviews as datasetReviews } from './reviews-data.js';
     document.addEventListener('focusin', function (e) {
       if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) {
         bar.classList.add('is-hidden-keyboard');
+        if (!e.target.closest('.concierge')) {
+          document.body.classList.add('keyboard-open');
+        }
       }
     });
     document.addEventListener('focusout', function () {
       bar.classList.remove('is-hidden-keyboard');
+      document.body.classList.remove('keyboard-open');
     });
     onScrollBar();
   }
@@ -797,10 +801,12 @@ import { reviews as datasetReviews } from './reviews-data.js';
       ask(v);
     });
   }
-  log.addEventListener('click', function (e) {
-    var a = e.target.closest('a[href^="#"]');
-    if (a) { closeConc(); var t = $(a.getAttribute('href')); if (t) t.scrollIntoView({ behavior: 'smooth' }); }
-  });
+  if (log) {
+    log.addEventListener('click', function (e) {
+      var a = e.target.closest('a[href^="#"]');
+      if (a) { closeConc(); var t = $(a.getAttribute('href')); if (t) t.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  }
 
 /* ---------------- hero background video ---------------- */
   /* Always loops. Each loop fades in over the poster, plays, then fades back
@@ -851,169 +857,6 @@ import { reviews as datasetReviews } from './reviews-data.js';
     });
   })();
 
-/* ---------------- feedback wall builder ---------------- */
-  function initFeedbackWall() {
-    var data = (Array.isArray(datasetReviews) && datasetReviews.length)
-      ? datasetReviews
-      : (Array.isArray(window.FB_REVIEWS) && window.FB_REVIEWS.length)
-        ? window.FB_REVIEWS
-        : [];
-    var container = document.getElementById('fbwallCols');
-    if (!container) return;
-
-    if (!data.length) {
-      container.innerHTML =
-        '<div class="fbwall-fallback" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:48px 20px; text-align:center; min-height:200px; background:#141414; border-radius:12px; margin:16px 0;">' +
-          '<span style="color:#D6A84F; font-size:22px; letter-spacing:3px; margin-bottom:10px;" aria-label="5 stars">★★★★★</span>' +
-          '<p style="color:#F5F2EA; font-family:var(--disp); font-size:20px; text-transform:uppercase; margin:0 0 8px;">4.9 · 377 Google Reviews</p>' +
-          '<p style="color:#A5A096; font-size:13.5px; max-width:480px; margin:0 0 16px;">Verified client reviews from the Custom Ink studio profile in Luxembourg.</p>' +
-          '<a href="https://www.google.com/maps/search/?api=1&query=Custom+Ink+Luxembourg+103+Waistrooss+Remerschen" target="_blank" rel="noopener" class="btn btn-gold btn-sm" style="display:inline-block; padding:10px 18px; font-size:11px;">Read all reviews on Google Maps →</a>' +
-        '</div>';
-      return;
-    }
-
-    /* Development-time validation */
-    if (window.console && console.assert) {
-      console.assert(
-        data.length === 377,
-        'Custom Ink review dataset should contain 377 reviews (found ' + data.length + ')'
-      );
-    }
-
-    function esc(x) {
-      return String(x == null ? '' : x)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    }
-
-    function initials(n) {
-      var parts = (n || '').trim().split(/\s+/);
-      var a = (parts[0] || '').charAt(0);
-      var b = parts.length > 1 ? parts[parts.length - 1].charAt(0) : '';
-      return ((a + b) || 'CI').toUpperCase();
-    }
-
-    function createCard(r, isDup) {
-      var card = document.createElement('article');
-      var rawText = (r.text || r.x || '').trim();
-      var hasText = rawText.length > 0;
-      card.className = 'review-card fb-card' + (hasText ? '' : ' fb-card--rating');
-      if (isDup) {
-        card.setAttribute('aria-hidden', 'true');
-      }
-
-      var name = (r.name || r.n || 'Anonymous').trim();
-      var dateStr = (r.date || r.t || '').trim();
-      var sourceName = (r.source || 'Google').trim();
-      var rating = typeof r.rating === 'number' ? r.rating : 5;
-      var starsStr = '★'.repeat(Math.max(1, Math.min(5, rating))) + '☆'.repeat(Math.max(0, 5 - rating));
-
-      var starsHtml = '<span class="fb-stars-row" aria-label="' + rating + ' stars" title="' + rating + ' stars on ' + esc(sourceName) + '">' + starsStr + '</span>';
-      var sourceHtml = '<span class="fb-source-tag">' + esc(sourceName) + ' Review</span>';
-
-      var textHtml = hasText
-        ? '<blockquote class="fb-text">“' + esc(rawText) + '”</blockquote>'
-        : '<p class="fb-text fb-text--empty">' + rating + '-star ' + esc(sourceName) + ' studio experience</p>';
-
-      var metaDetails = [];
-      if (dateStr) metaDetails.push(esc(dateStr));
-
-      card.innerHTML =
-        '<div class="fb-card-inner">' +
-          '<header class="fb-top-row">' +
-            starsHtml +
-            sourceHtml +
-          '</header>' +
-          textHtml +
-          '<footer class="fb-footer">' +
-            '<div class="fb-ava" aria-hidden="true"><span>' + esc(initials(name)) + '</span></div>' +
-            '<div class="fb-who">' +
-              '<cite>' + esc(name) + '</cite>' +
-              (metaDetails.length ? '<span>' + metaDetails.join(' · ') + '</span>' : '') +
-            '</div>' +
-          '</footer>' +
-        '</div>';
-      return card;
-    }
-
-    var currentCols = -1;
-
-    function getTargetColCount() {
-      var w = window.innerWidth;
-      if (w > 960) return 3;
-      if (w > 600) return 2;
-      return 1;
-    }
-
-    function renderWall() {
-      var cols = getTargetColCount();
-      if (cols === currentCols) return;
-      currentCols = cols;
-
-      container.innerHTML = '';
-
-      var durations = [];
-      if (cols === 3) {
-        durations = [300, 360, 330];
-      } else if (cols === 2) {
-        durations = [310, 370];
-      } else {
-        durations = [340];
-      }
-
-      for (var c = 0; c < cols; c++) {
-        var col = document.createElement('div');
-        col.className = 'review-column fb-col fb-col-' + (c + 1);
-
-        var track = document.createElement('div');
-        track.className = 'review-track fb-track fb-dir-up';
-        track.style.animationDuration = durations[c] + 's';
-        track.style.setProperty('--dur', durations[c] + 's');
-
-        // Review Group A (primary sequence)
-        var groupA = document.createElement('div');
-        groupA.className = 'review-group';
-
-        for (var i = 0; i < data.length; i++) {
-          if (i % cols === c) {
-            groupA.appendChild(createCard(data[i], false));
-          }
-        }
-
-        // Review Group B (identical duplicate sequence for seamless -50% loop)
-        var groupB = document.createElement('div');
-        groupB.className = 'review-group';
-        groupB.setAttribute('aria-hidden', 'true');
-
-        for (var j = 0; j < data.length; j++) {
-          if (j % cols === c) {
-            groupB.appendChild(createCard(data[j], true));
-          }
-        }
-
-        track.appendChild(groupA);
-        track.appendChild(groupB);
-        col.appendChild(track);
-        container.appendChild(col);
-      }
-    }
-
-    renderWall();
-
-    var resizeTimer = null;
-    window.addEventListener('resize', function () {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(renderWall, 150);
-    });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initFeedbackWall);
-  } else {
-    initFeedbackWall();
-  }
 
 /* ---------------- footer year ---------------- */
   var y = $('#year'); if (y) y.textContent = new Date().getFullYear();
@@ -1027,6 +870,29 @@ import { reviews as datasetReviews } from './reviews-data.js';
     if (!mapEl || !btn || !statusEl) return;
 
     var map = null, userMarker = null, routeLine = null, shopMarker = null;
+    var leafletLoading = false;
+
+    function loadLeaflet(cb) {
+      if (window.L) return cb && cb();
+      if (leafletLoading) {
+        var timer = setInterval(function () {
+          if (window.L) { clearInterval(timer); cb && cb(); }
+        }, 80);
+        return;
+      }
+      leafletLoading = true;
+      if (!document.getElementById('leaflet-css')) {
+        var link = document.createElement('link');
+        link.id = 'leaflet-css';
+        link.rel = 'stylesheet';
+        link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+        document.head.appendChild(link);
+      }
+      var s = document.createElement('script');
+      s.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+      s.onload = function () { cb && cb(); };
+      document.head.appendChild(s);
+    }
 
     function shopIcon() {
       return L.divIcon({ className: '', html: '<span class="ci-shop-pin"></span>', iconSize: [18, 18], iconAnchor: [9, 9] });
@@ -1057,18 +923,15 @@ import { reviews as datasetReviews } from './reviews-data.js';
       }
     }
 
-    /* init lazily when the map first scrolls into view (Leaflet loads deferred) */
-    var tries = 0;
-    function tryInit() {
-      if (map) return;
-      if (window.L) { initMap(); return; }
-      if (tries++ < 40) setTimeout(tryInit, 500);
-    }
+    /* init lazily when the map first scrolls into view */
     var mapIo = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
-        if (en.isIntersecting) { tryInit(); mapIo.disconnect(); }
+        if (en.isIntersecting) {
+          loadLeaflet(initMap);
+          mapIo.disconnect();
+        }
       });
-    }, { threshold: 0.05 });
+    }, { rootMargin: '400px 0px' });
     mapIo.observe(mapEl);
 
     function setStatus(msg, ok) {
@@ -1079,47 +942,51 @@ import { reviews as datasetReviews } from './reviews-data.js';
     function resetBtn(text) { btn.disabled = false; btn.textContent = text; }
 
     function showRoute(pos) {
-      if (!map && window.L) initMap();
-      if (!map) {
-        setStatus('The map is initializing — please try in a moment.');
-        resetBtn('Fetch my location');
-        return;
-      }
-      var lat = pos.coords.latitude, lng = pos.coords.longitude;
-      if (userMarker) map.removeLayer(userMarker);
-      userMarker = L.marker([lat, lng], { icon: userIcon(), title: 'You are here' }).addTo(map);
-      setStatus('Drawing your route to the studio…');
-      var url = 'https://router.project-osrm.org/route/v1/driving/' +
-        lng + ',' + lat + ';' + SHOP.lng + ',' + SHOP.lat + '?overview=full&geometries=geojson';
-      fetch(url)
-        .then(function (r) { return r.json(); })
-        .then(function (data) {
-          if (data.code === 'Ok' && data.routes && data.routes[0]) {
-            var route = data.routes[0];
-            var coords = route.geometry.coordinates.map(function (c) { return [c[1], c[0]]; });
-            if (routeLine) map.removeLayer(routeLine);
-            routeLine = L.polyline(coords, { color: '#0B0B0B', weight: 3.5, opacity: 0.85 }).addTo(map);
-            map.fitBounds(routeLine.getBounds(), { padding: [42, 42] });
-            var km = (route.distance / 1000).toFixed(1);
-            var min = Math.round(route.duration / 60);
-            setStatus('≈ ' + km + ' km · about ' + min + ' min by car to the studio.', true);
-            resetBtn('Update my location');
-            track('map_route_found', { km: km, min: min });
-          } else {
-            setStatus('No route found from your location — use Google Maps directions instead.');
+      loadLeaflet(function () {
+        if (!map) initMap();
+        if (!map) {
+          setStatus('The map is initializing — please try in a moment.');
+          resetBtn('Fetch my location');
+          return;
+        }
+        var lat = pos.coords.latitude, lng = pos.coords.longitude;
+        if (userMarker) map.removeLayer(userMarker);
+        userMarker = L.marker([lat, lng], { icon: userIcon(), title: 'You are here' }).addTo(map);
+        setStatus('Drawing your route to the studio…');
+        var url = 'https://router.project-osrm.org/route/v1/driving/' +
+          lng + ',' + lat + ';' + SHOP.lng + ',' + SHOP.lat + '?overview=full&geometries=geojson';
+        fetch(url)
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (data.code === 'Ok' && data.routes && data.routes[0]) {
+              var route = data.routes[0];
+              var coords = route.geometry.coordinates.map(function (c) { return [c[1], c[0]]; });
+              if (routeLine) map.removeLayer(routeLine);
+              routeLine = L.polyline(coords, { color: '#0B0B0B', weight: 3.5, opacity: 0.85 }).addTo(map);
+              map.fitBounds(routeLine.getBounds(), { padding: [42, 42] });
+              var km = (route.distance / 1000).toFixed(1);
+              var min = Math.round(route.duration / 60);
+              setStatus('≈ ' + km + ' km · about ' + min + ' min by car to the studio.', true);
+              resetBtn('Update my location');
+              track('map_route_found', { km: km, min: min });
+            } else {
+              setStatus('No route found from your location — use Google Maps directions instead.');
+              resetBtn('Try again');
+            }
+          })
+          .catch(function () {
+            setStatus('Could not reach the routing service — use Google Maps directions instead.');
             resetBtn('Try again');
-          }
-        })
-        .catch(function () {
-          setStatus('Could not reach the routing service — use Google Maps directions instead.');
-          resetBtn('Try again');
-        });
+          });
+      });
     }
 
     btn.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
-      if (!map && window.L) initMap();
+      loadLeaflet(function () {
+        if (!map) initMap();
+      });
       btn.disabled = true;
       btn.textContent = 'Locating…';
       setStatus('Requesting your location from browser…');
@@ -1205,6 +1072,185 @@ import { reviews as datasetReviews } from './reviews-data.js';
       }
 
       setTimeout(step, initialDelay);
+    });
+  })();
+
+  /* ---------------- feedback wall builder ---------------- */
+  (function initFeedbackWall() {
+    var container = document.getElementById('fbwallCols');
+    var wallEl = document.getElementById('feedbackWall') || container;
+    if (!container || !wallEl) return;
+
+    var loaded = false;
+    var data = window.FB_REVIEWS || [];
+    var currentCols = -1;
+
+    function esc(x) {
+      return String(x)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function initials(n) {
+      var clean = (n || '').replace(/[^a-zA-Z0-9\s]/g, '').trim();
+      var parts = clean.split(/\s+/).filter(Boolean);
+      if (!parts.length) return 'G';
+      var a = parts[0].charAt(0);
+      var b = parts.length > 1 ? parts[parts.length - 1].charAt(0) : '';
+      return ((a + b) || 'G').toUpperCase();
+    }
+
+    function createCard(r, isDup) {
+      var li = document.createElement('li');
+      var name = (r && (r.name || r.author_name || r.author || r.n || '')).trim() || 'Google reviewer';
+      var text = (r && (r.text || r.review_text || r.content || r.x || '')).trim();
+      var date = (r && (r.date || r.time || r.t || '')).trim();
+      var hasText = Boolean(text);
+      var ratingNum = (r && typeof r.rating === 'number') ? r.rating : 5;
+      var sourceName = (r && (r.source || 'Google')).trim();
+
+      li.className = 'review-card fb-card' + (hasText ? '' : ' fb-card--rating');
+      if (isDup) {
+        li.setAttribute('aria-hidden', 'true');
+      }
+
+      var stars = '<span class="fb-stars-row" aria-label="' + ratingNum + ' stars" title="' + ratingNum + ' stars on Google">★★★★★</span>';
+      var textHtml = hasText
+        ? '<blockquote class="fb-text">“' + esc(text) + '”</blockquote>'
+        : '<p class="fb-text fb-text--rating"><span class="fb-rating-stars-inline" aria-hidden="true">★★★★★</span> 5-star rating on Google</p>';
+
+      li.innerHTML =
+        '<article class="fb-card-inner">' +
+          '<header class="fb-top-row">' +
+            stars +
+            '<span class="fb-source-tag">' + esc(sourceName) + ' Review</span>' +
+          '</header>' +
+          textHtml +
+          '<footer class="fb-footer">' +
+            '<div class="fb-ava" aria-hidden="true"><span>' + esc(initials(name)) + '</span></div>' +
+            '<div class="fb-who">' +
+              '<cite>' + esc(name) + '</cite>' +
+              (date ? '<span>' + esc(date) + '</span>' : '') +
+            '</div>' +
+          '</footer>' +
+        '</article>';
+      return li;
+    }
+
+    function getTargetColCount() {
+      var w = window.innerWidth;
+      if (w > 960) return 3;
+      if (w > 600) return 2;
+      return 1;
+    }
+
+    function renderWall() {
+      if (!data || !data.length) return;
+      var cols = getTargetColCount();
+      if (cols === currentCols) return;
+      currentCols = cols;
+
+      container.innerHTML = '';
+
+      // Slow, smooth durations staggered across columns for natural movement
+      var durations = [];
+      if (cols === 3) {
+        durations = ['300s', '360s', '330s'];
+      } else if (cols === 2) {
+        durations = ['310s', '350s'];
+      } else {
+        durations = ['560s'];
+      }
+
+      var groupA_list = [];
+      var groupB_list = [];
+
+      for (var c = 0; c < cols; c++) {
+        var colDiv = document.createElement('div');
+        colDiv.className = 'review-column fb-col fb-col-' + (c + 1);
+
+        var track = document.createElement('div');
+        track.className = 'review-track fb-track fb-dir-up';
+        track.style.setProperty('--dur', durations[c]);
+        track.style.animationDuration = durations[c];
+
+        var groupA = document.createElement('ul');
+        groupA.className = 'review-group';
+
+        var groupB = document.createElement('ul');
+        groupB.className = 'review-group';
+        groupB.setAttribute('aria-hidden', 'true');
+
+        track.appendChild(groupA);
+        track.appendChild(groupB);
+        colDiv.appendChild(track);
+        container.appendChild(colDiv);
+
+        groupA_list.push(groupA);
+        groupB_list.push(groupB);
+      }
+
+      // Distribute EVERY single review across the visible columns (i % cols)
+      // All 377 authentic reviews are included with none omitted
+      for (var i = 0; i < data.length; i++) {
+        var targetA = groupA_list[i % cols];
+        targetA.appendChild(createCard(data[i], false));
+      }
+
+      // Duplicate each column's list into group B for the 100% seamless infinite loop
+      for (var c = 0; c < cols; c++) {
+        var items = groupA_list[c].children;
+        for (var j = 0; j < items.length; j++) {
+          var clone = items[j].cloneNode(true);
+          clone.setAttribute('aria-hidden', 'true');
+          groupB_list[c].appendChild(clone);
+        }
+      }
+    }
+
+    function startWall() {
+      if (loaded) return;
+      loaded = true;
+      if (window.FB_REVIEWS && window.FB_REVIEWS.length) {
+        data = window.FB_REVIEWS;
+        renderWall();
+      } else {
+        import('./fb-reviews.js').then(function (mod) {
+          data = mod.reviews || window.FB_REVIEWS || [];
+          renderWall();
+        }).catch(function (err) {
+          console.error('Failed to load reviews:', err);
+        });
+      }
+    }
+
+    if ('IntersectionObserver' in window) {
+      var loadObserver = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+          startWall();
+          loadObserver.disconnect();
+        }
+      }, { rootMargin: '800px 0px' });
+      loadObserver.observe(wallEl);
+
+      var pauseObserver = new IntersectionObserver(function (entries) {
+        var isVisible = entries[0].isIntersecting;
+        var tracks = container.querySelectorAll('.fb-track');
+        for (var t = 0; t < tracks.length; t++) {
+          tracks[t].style.animationPlayState = isVisible ? 'running' : 'paused';
+        }
+      }, { threshold: 0.02 });
+      pauseObserver.observe(wallEl);
+    } else {
+      startWall();
+    }
+
+    var resizeTimer = null;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(renderWall, 150);
     });
   })();
 

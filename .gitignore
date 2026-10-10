@@ -1,7 +1,6 @@
 node_modules/
-/dist/
-_build/*
-!_build/export_reviews.js
+dist/
+_build/
 .env
 .env.*
 !.env.example

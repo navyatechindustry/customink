@@ -34,6 +34,47 @@
 <link rel="manifest" href="/site.webmanifest" />
 <link rel="stylesheet" href="assets/fonts/fonts.css">
 <link rel="stylesheet" href="assets/css/style.css?v=26">
+
+<!-- Structured data: WebPage & Breadcrumbs -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://customink.lu/privacy.html#webpage",
+      "url": "https://customink.lu/privacy.html",
+      "name": "Privacy Policy — Custom Ink Luxembourg",
+      "description": "Privacy policy and GDPR data protection standards for Custom Ink Luxembourg tattoo & piercing studio in Remerschen.",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://customink.lu/#website",
+        "url": "https://customink.lu/",
+        "name": "Custom Ink Luxembourg"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://customink.lu/privacy.html#breadcrumbs",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://customink.lu/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Privacy Policy",
+          "item": "https://customink.lu/privacy.html"
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
   .legal-page {
     max-width: 840px;

@@ -57,9 +57,8 @@ export const FeedbackWall: React.FC<FeedbackWallProps> = ({ className = "" }) =>
 
         {/* Layer 1 — Fixed Review Viewport (overflow: hidden, no manual scroll, no scrollbars) */}
         <div
-          className="review-wall-viewport relative w-full overflow-hidden pointer-events-none select-none border-t border-b border-black py-5"
+          className="review-wall-viewport relative w-full overflow-hidden pointer-events-none select-none border-t border-b border-black py-3 md:py-5 h-[420px] sm:h-[500px] lg:h-[720px] max-h-[60vh] lg:max-h-[70vh]"
           style={{
-            height: "min(760px, 70vh)",
             overflow: "hidden",
             maskImage: "none",
             WebkitMaskImage: "none",

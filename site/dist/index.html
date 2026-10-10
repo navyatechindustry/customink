@@ -33,49 +33,122 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <meta name="apple-mobile-web-app-title" content="Custom INK" />
 <link rel="manifest" href="/site.webmanifest" />
-<link rel="preload" href="/assets/cormorant-garamond-400-CUoBjw-S.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/manrope-400-DHIcAJRg.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="preload" href="/assets/anton-400-Byf51wtH.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/space-grotesk-400-BhU9QXUp.woff2" as="font" type="font/woff2" crossorigin>
 
 <!-- Structured data: LocalBusiness / TattooParlor -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": ["TattooParlor", "LocalBusiness"],
-  "@id": "https://customink.lu/#studio",
-  "name": "Custom Ink Luxembourg",
-  "description": "Tattoo and piercing studio in Remerschen, Luxembourg. Custom tattoos in all styles — fine line, dot work, realism, black & grey, colour — cover-ups, scar camouflage and professional piercing.",
-  "url": "https://customink.lu/",
-  "telephone": "+35226550766",
-  "email": "info@customink.lu",
-  "image": "https://customink.lu/assets/img/og.jpg",
-  "priceRange": "€€",
-  "currenciesAccepted": "EUR",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "103, Waistrooss",
-    "postalCode": "L-5440",
-    "addressLocality": "Remerschen",
-    "addressCountry": "LU"
-  },
-  "openingHoursSpecification": [
+  "@graph": [
     {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-      "opens": "10:00",
-      "closes": "19:00"
+      "@type": "WebSite",
+      "@id": "https://customink.lu/#website",
+      "url": "https://customink.lu/",
+      "name": "Custom Ink Luxembourg",
+      "description": "Custom tattoo and precision piercing studio in Remerschen, Luxembourg.",
+      "publisher": { "@id": "https://customink.lu/#studio" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://customink.lu/#webpage",
+      "url": "https://customink.lu/",
+      "name": "Custom Ink Luxembourg — Tattoo & Piercing Studio in Remerschen",
+      "isPartOf": { "@id": "https://customink.lu/#website" },
+      "about": { "@id": "https://customink.lu/#studio" },
+      "description": "Award-winning tattoo & piercing studio in Remerschen, Luxembourg. Custom tattoos in every style — fine line, realism, colour, black & grey, dotwork — plus professional piercing. 4.9★ from 377 Google reviews.",
+      "inLanguage": "en"
+    },
+    {
+      "@type": ["TattooParlor", "LocalBusiness"],
+      "@id": "https://customink.lu/#studio",
+      "name": "Custom Ink Luxembourg",
+      "description": "Custom tattoo and precision piercing atelier in Remerschen, Luxembourg. Resident artists and permanent international guest rotation covering all tattoo styles — fine line, realism, colour, black & grey, dotwork, cover-ups — plus professional piercing with high hygiene standards.",
+      "url": "https://customink.lu/",
+      "telephone": "+35226550766",
+      "email": "info@customink.lu",
+      "image": "https://customink.lu/assets/img/og.jpg",
+      "priceRange": "€€",
+      "currenciesAccepted": "EUR",
+      "paymentAccepted": "Cash, Credit Card, Debit Card",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "103, Waistrooss",
+        "postalCode": "L-5440",
+        "addressLocality": "Remerschen",
+        "addressRegion": "Canton Remich",
+        "addressCountry": "LU"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 49.4870753,
+        "longitude": 6.3530326
+      },
+      "hasMap": "https://www.google.com/maps/search/?api=1&query=Custom+Ink+Luxembourg+103+Waistrooss+Remerschen",
+      "areaServed": [
+        { "@type": "Country", "name": "Luxembourg" },
+        { "@type": "AdministrativeArea", "name": "Canton Remich" },
+        { "@type": "City", "name": "Remerschen" },
+        { "@type": "City", "name": "Schengen" }
+      ],
+      "knowsLanguage": ["lb", "de", "en", "fr", "pt", "it", "ru"],
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "opens": "10:00",
+          "closes": "19:00"
+        }
+      ],
+      "sameAs": [
+        "https://www.instagram.com/customink_tattoostudio/",
+        "https://www.facebook.com/Customink.lu/"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Custom Ink Studio Services",
+        "itemListElement": [
+          {
+            "@type": "OfferCatalog",
+            "name": "Tattoo Services",
+            "itemListElement": [
+              {
+                "@type": "Service",
+                "name": "Custom Tattoo Design & Execution",
+                "description": "Tailored tattoo artistry across all styles: Fine line, dotwork, realism, black and grey, colour, neo-traditional, and Japanese Irezumi.",
+                "provider": { "@id": "https://customink.lu/#studio" }
+              },
+              {
+                "@type": "Service",
+                "name": "Tattoo Consultation",
+                "description": "In-studio consultation to discuss design, sizing, skin placement, and artist matching before booking.",
+                "provider": { "@id": "https://customink.lu/#studio" }
+              },
+              {
+                "@type": "Service",
+                "name": "Tattoo Cover-up and Rework",
+                "description": "Expert consultation and artistic rework or camouflage of existing tattoos.",
+                "provider": { "@id": "https://customink.lu/#studio" }
+              }
+            ]
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Piercing Services",
+            "itemListElement": [
+              {
+                "@type": "Service",
+                "name": "Professional Body Piercing",
+                "description": "Hygienic ear, facial, oral, and body piercings with personal placement advice, single-use sterile tools, and premium starter jewellery.",
+                "provider": { "@id": "https://customink.lu/#studio" }
+              }
+            ]
+          }
+        ]
+      }
     }
-  ],
-  "sameAs": [
-    "https://www.instagram.com/customink_tattoostudio/",
-    "https://www.facebook.com/Customink.lu/"
-  ],
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": "377",
-    "bestRating": "5"
-  }
+  ]
 }
 </script>
 <!-- Structured data: FAQ -->
@@ -147,9 +220,9 @@
   ]
 }
 </script>
-  <script type="module" crossorigin src="/assets/main-BTuhvoCo.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/main-BsNya1Kc.css">
-  <link rel="stylesheet" crossorigin href="/assets/fonts-DScTEc-r.css">
+  <script type="module" crossorigin src="/assets/main-D5avZBvH.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/main-DUX6xw05.css">
+  <link rel="stylesheet" crossorigin href="/assets/fonts-DAvgtCSa.css">
 </head>
 <body>
 
@@ -203,11 +276,11 @@
 
 <!-- ============ 1. HERO ============ -->
 <section class="hero" id="top">
-  <img class="hero-poster" src="/assets/heading-poster-CvYIY4fT.jpg" alt="" aria-hidden="true" width="1920" height="1080" fetchpriority="high">
+  <picture><source srcset="/assets/heading-poster-nKUSKRBU.webp" type="image/webp"><img class="hero-poster" src="/assets/heading-poster-CvYIY4fT.jpg" alt="" aria-hidden="true" width="1920" height="1080" fetchpriority="high"></picture>
   <video class="hero-video" autoplay muted loop playsinline preload="metadata"
-    poster="/assets/heading-poster-CvYIY4fT.jpg" aria-hidden="true" tabindex="-1">
-
-    <source src="/assets/heading-DJPaAMKW.mp4" type="video/mp4">
+    poster="/assets/heading-poster-nKUSKRBU.webp" aria-hidden="true" tabindex="-1">
+    <source src="/assets/heading-LQ1Gsfg3.webm" type="video/webm">
+    <source src="/assets/heading-CCXoYFTM.mp4" type="video/mp4">
   </video>
   <div class="hero-veil" aria-hidden="true"></div>
   <div class="hero-inner">
@@ -232,9 +305,9 @@
       </div>
     </div>
     <div class="hero-art" aria-hidden="true">
-      <figure class="ha ha-1 reveal-load"><img src="/assets/hero-gladiator-ByjU0H7-.jpg" alt="Black and grey realism gladiator tattoo artwork" width="470" height="797" loading="eager" decoding="async"></figure>
-      <figure class="ha ha-2 reveal-load"><img src="/assets/hero-ornamental-IsS1DHQh.jpg" alt="Fine line ornamental tattoo design" width="485" height="622" loading="eager" decoding="async"></figure>
-      <figure class="ha ha-3 reveal-load"><img src="/assets/hero-chest-s0NxUHwq.jpg" alt="Dark realism chest tattoo piece" width="487" height="796" loading="eager" decoding="async"></figure>
+      <figure class="ha ha-1 reveal-load"><picture><source srcset="/assets/hero-gladiator-pmQzMUeV.webp" type="image/webp"><img src="/assets/hero-gladiator-ByjU0H7-.jpg" alt="Black and grey realism gladiator tattoo artwork" width="470" height="797" loading="eager" decoding="async"></picture></figure>
+      <figure class="ha ha-2 reveal-load"><picture><source srcset="/assets/hero-ornamental-BqiF8fnD.webp" type="image/webp"><img src="/assets/hero-ornamental-IsS1DHQh.jpg" alt="Fine line ornamental tattoo design" width="485" height="622" loading="eager" decoding="async"></picture></figure>
+      <figure class="ha ha-3 reveal-load"><picture><source srcset="/assets/hero-chest-OHkQ5HwJ.webp" type="image/webp"><img src="/assets/hero-chest-s0NxUHwq.jpg" alt="Dark realism chest tattoo piece" width="487" height="796" loading="eager" decoding="async"></picture></figure>
     </div>
   </div>
   <a class="scroll-cue" href="#studio" aria-label="Scroll to introduction"><span></span></a>
@@ -269,9 +342,9 @@
         </ul>
       </div>
       <div class="intro-art">
-        <figure class="ia ia-1 reveal"><img src="/assets/studio-reception-DzsNFfrh.jpg" alt="Custom Ink Luxembourg studio reception with the studio's wooden logo" width="460" height="355" loading="lazy" decoding="async"></figure>
-        <figure class="ia ia-2 reveal"><img src="/assets/studio-artist-DW9LwTl7.jpg" alt="A Custom Ink artist at work, tattooing a client's arm" width="477" height="626" loading="lazy" decoding="async"></figure>
-        <figure class="ia ia-3 reveal"><img src="/assets/studio-sketch-C3ndEwBz.jpg" alt="A lion design sketch on an easel inside the studio" width="435" height="560" loading="lazy" decoding="async"></figure>
+        <figure class="ia ia-1 reveal"><picture><source srcset="/assets/studio-reception-B_Eog_jm.webp" type="image/webp"><img src="/assets/studio-reception-DzsNFfrh.jpg" alt="Custom Ink Luxembourg studio reception with the studio's wooden logo" width="460" height="355" loading="lazy" decoding="async"></picture></figure>
+        <figure class="ia ia-2 reveal"><picture><source srcset="/assets/studio-artist-Bzkox5GF.webp" type="image/webp"><img src="/assets/studio-artist-DW9LwTl7.jpg" alt="A Custom Ink artist at work, tattooing a client's arm" width="477" height="626" loading="lazy" decoding="async"></picture></figure>
+        <figure class="ia ia-3 reveal"><picture><source srcset="/assets/studio-sketch-u69khpw_.webp" type="image/webp"><img src="/assets/studio-sketch-C3ndEwBz.jpg" alt="A lion design sketch on an easel inside the studio" width="435" height="560" loading="lazy" decoding="async"></picture></figure>
       </div>
     </div>
   </div>
@@ -301,199 +374,199 @@
     <div class="masonry" id="masonry">
       <figure class="g-item" data-cat="colour" data-title="Skull &amp; spades sleeve" data-style="Neo-traditional" data-place="Forearm sleeve">
         <button type="button" class="g-media" aria-label="Enlarge: neo-traditional skull and spades colour sleeve tattoo">
-          <img src="/assets/w01-blackgrey-sleeve-CM1mSMUF.jpg" alt="Neo-traditional colour sleeve tattoo with skull, spades and banner motifs" width="473" height="717" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w01-blackgrey-sleeve-B7Mk_91a.webp" type="image/webp"><img src="/assets/w01-blackgrey-sleeve-CM1mSMUF.jpg" alt="Neo-traditional colour sleeve tattoo with skull, spades and banner motifs" width="473" height="717" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Neo-traditional</span><span class="g-place">Forearm sleeve</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="dotwork" data-title="Mandala forearm" data-style="Dotwork" data-place="Forearm">
         <button type="button" class="g-media" aria-label="Enlarge: dotwork mandala tattoo on a forearm">
-          <img src="/assets/w02-dotwork-forearm-pU4CAFjS.jpg" alt="Delicate dotwork mandala tattoo with blue accent on a forearm" width="457" height="621" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w02-dotwork-forearm-Klog4ZDj.webp" type="image/webp"><img src="/assets/w02-dotwork-forearm-pU4CAFjS.jpg" alt="Delicate dotwork mandala tattoo with blue accent on a forearm" width="457" height="621" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Dotwork</span><span class="g-place">Forearm</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="colour" data-title="Black cat &amp; poppies" data-style="Colour" data-place="Thigh">
         <button type="button" class="g-media" aria-label="Enlarge: black cat tattoo with red poppies on a thigh">
-          <img src="/assets/w06-colour-cat-DAgedRjR.jpg" alt="Black cat tattoo with orange eyes and red poppy flowers on a thigh" width="485" height="487" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w06-colour-cat-Cs3SNEfr.webp" type="image/webp"><img src="/assets/w06-colour-cat-DAgedRjR.jpg" alt="Black cat tattoo with orange eyes and red poppy flowers on a thigh" width="485" height="487" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Colour</span><span class="g-place">Thigh</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="fineline" data-title="Ornamental feminine face" data-style="Fine line" data-place="Leg">
         <button type="button" class="g-media" aria-label="Enlarge: fine line ornamental tattoo of a woman's face">
-          <img src="/assets/w07-fineline-ornament-Bhnawbpi.jpg" alt="Fine line dotwork tattoo of a serene woman's face framed by ornamental leaves" width="457" height="798" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w07-fineline-ornament-DNIyz50M.webp" type="image/webp"><img src="/assets/w07-fineline-ornament-Bhnawbpi.jpg" alt="Fine line dotwork tattoo of a serene woman's face framed by ornamental leaves" width="457" height="798" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Fine line</span><span class="g-place">Leg</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="realism" data-title="Cherub shoulder piece" data-style="Realism" data-place="Shoulder">
         <button type="button" class="g-media" aria-label="Enlarge: black and grey cherub realism tattoo on a shoulder">
-          <img src="/assets/w04-realism-cherub-DkPKe1Qr.jpg" alt="Black and grey cherub and clouds realism tattoo on a shoulder and upper arm" width="417" height="711" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w04-realism-cherub-BCWuw19y.webp" type="image/webp"><img src="/assets/w04-realism-cherub-DkPKe1Qr.jpg" alt="Black and grey cherub and clouds realism tattoo on a shoulder and upper arm" width="417" height="711" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Realism</span><span class="g-place">Shoulder</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="blackgrey" data-title="Chest blackwork" data-style="Solid black" data-place="Chest">
         <button type="button" class="g-media" aria-label="Enlarge: solid black ornamental chest tattoo">
-          <img src="/assets/hero-chest-s0NxUHwq.jpg" alt="Solid black ornamental mandala tattoo across a man's chest" width="487" height="796" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/hero-chest-OHkQ5HwJ.webp" type="image/webp"><img src="/assets/hero-chest-s0NxUHwq.jpg" alt="Solid black ornamental mandala tattoo across a man's chest" width="487" height="796" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Solid black</span><span class="g-place">Chest</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="dotwork" data-title="Geometric mandala" data-style="Dotwork" data-place="Shoulder">
         <button type="button" class="g-media" aria-label="Enlarge: geometric mandala tattoo with red accents on a shoulder">
-          <img src="/assets/w03-dotwork-shoulder-C8yD0Kyg.jpg" alt="Geometric dotwork mandala tattoo with red dimensional accents on a shoulder" width="358" height="542" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w03-dotwork-shoulder-BLz8EwEI.webp" type="image/webp"><img src="/assets/w03-dotwork-shoulder-C8yD0Kyg.jpg" alt="Geometric dotwork mandala tattoo with red dimensional accents on a shoulder" width="358" height="542" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Dotwork</span><span class="g-place">Shoulder</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="blackgrey" data-title="Tiger &amp; rose sleeve" data-style="Black &amp; grey" data-place="Half sleeve">
         <button type="button" class="g-media" aria-label="Enlarge: black and grey tiger and rose tattoo sleeve">
-          <img src="/assets/w08-blackgrey-tiger-o6nTYmoU.jpg" alt="Black and grey tiger portrait and rose tattoo on an upper arm" width="481" height="801" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w08-blackgrey-tiger-Om4LFACk.webp" type="image/webp"><img src="/assets/w08-blackgrey-tiger-o6nTYmoU.jpg" alt="Black and grey tiger portrait and rose tattoo on an upper arm" width="481" height="801" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Black &amp; grey</span><span class="g-place">Half sleeve</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="fineline" data-title="Single wildflower" data-style="Fine line" data-place="Back">
         <button type="button" class="g-media" aria-label="Enlarge: small fine line wildflower tattoo on a back">
-          <img src="/assets/w10-fineline-flower-CMqhwAf4.jpg" alt="Small delicate fine line wildflower tattoo on a shoulder blade" width="417" height="512" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w10-fineline-flower-OPnBXCx8.webp" type="image/webp"><img src="/assets/w10-fineline-flower-CMqhwAf4.jpg" alt="Small delicate fine line wildflower tattoo on a shoulder blade" width="417" height="512" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Fine line</span><span class="g-place">Back</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="colour" data-title="Neo-traditional portrait" data-style="Colour" data-place="Thigh">
         <button type="button" class="g-media" aria-label="Enlarge: neo-traditional colour portrait tattoo of a woman">
-          <img src="/assets/w09-colour-neotrad-DF9qsfl5.jpg" alt="Neo-traditional colour tattoo of a red-haired woman surrounded by autumn leaves" width="486" height="821" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w09-colour-neotrad-873R47e2.webp" type="image/webp"><img src="/assets/w09-colour-neotrad-DF9qsfl5.jpg" alt="Neo-traditional colour tattoo of a red-haired woman surrounded by autumn leaves" width="486" height="821" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Colour</span><span class="g-place">Thigh</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="blackgrey" data-title="Gladiator statue" data-style="Black &amp; grey" data-place="Upper arm">
         <button type="button" class="g-media" aria-label="Enlarge: black and grey classical statue tattoo on an upper arm">
-          <img src="/assets/hero-gladiator-ByjU0H7-.jpg" alt="Black and grey classical statue with laurels realism tattoo on an upper arm" width="470" height="797" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/hero-gladiator-pmQzMUeV.webp" type="image/webp"><img src="/assets/hero-gladiator-ByjU0H7-.jpg" alt="Black and grey classical statue with laurels realism tattoo on an upper arm" width="470" height="797" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Black &amp; grey</span><span class="g-place">Upper arm</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="dotwork" data-title="Full back geometry" data-style="Dotwork" data-place="Full back">
         <button type="button" class="g-media" aria-label="Enlarge: large geometric dotwork tattoo covering a full back">
-          <img src="/assets/w24-dotwork-backpiece-DcMQhKRq.jpg" alt="Large ornamental geometric dotwork back piece with sacred geometry" width="475" height="490" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w24-dotwork-backpiece-BwHvjgnh.webp" type="image/webp"><img src="/assets/w24-dotwork-backpiece-DcMQhKRq.jpg" alt="Large ornamental geometric dotwork back piece with sacred geometry" width="475" height="490" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Dotwork</span><span class="g-place">Full back</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="fineline" data-title="Worn sneakers" data-style="Fine line" data-place="Shin">
         <button type="button" class="g-media" aria-label="Enlarge: small realistic sneaker tattoo on a shin">
-          <img src="/assets/w11-fineline-sneaker-BUVlKzK8.jpg" alt="Small black and grey realistic sneaker tattoo on a shin" width="378" height="385" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w11-fineline-sneaker-BphGujbm.webp" type="image/webp"><img src="/assets/w11-fineline-sneaker-BUVlKzK8.jpg" alt="Small black and grey realistic sneaker tattoo on a shin" width="378" height="385" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Fine line</span><span class="g-place">Shin</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="realism" data-title="Child portrait" data-style="Realism" data-place="Forearm">
         <button type="button" class="g-media" aria-label="Enlarge: black and grey child portrait realism tattoo on a forearm">
-          <img src="/assets/w15-realism-portrait-Oe4hkp6N.jpg" alt="Black and grey photorealistic child portrait tattoo on a forearm" width="483" height="777" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w15-realism-portrait-ByjkRXuO.webp" type="image/webp"><img src="/assets/w15-realism-portrait-Oe4hkp6N.jpg" alt="Black and grey photorealistic child portrait tattoo on a forearm" width="483" height="777" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Realism</span><span class="g-place">Forearm</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="blackgrey" data-title="The witch" data-style="Black &amp; grey" data-place="Thigh">
         <button type="button" class="g-media" aria-label="Enlarge: black and grey witch tattoo on a thigh">
-          <img src="/assets/w12-blackgrey-witch-cJv8F4H7.jpg" alt="Black and grey witch with flowing hair tattoo on a thigh" width="448" height="607" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w12-blackgrey-witch-cRl-XEPs.webp" type="image/webp"><img src="/assets/w12-blackgrey-witch-cJv8F4H7.jpg" alt="Black and grey witch with flowing hair tattoo on a thigh" width="448" height="607" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Black &amp; grey</span><span class="g-place">Thigh</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="colour" data-title="Peacock" data-style="Colour" data-place="Calf">
         <button type="button" class="g-media" aria-label="Enlarge: colour peacock tattoo on a calf">
-          <img src="/assets/w14-colour-peacock-C5Z_bPs1.jpg" alt="Vibrant colour peacock with green feathers tattoo on a calf" width="477" height="612" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w14-colour-peacock-CAbrp2BJ.webp" type="image/webp"><img src="/assets/w14-colour-peacock-C5Z_bPs1.jpg" alt="Vibrant colour peacock with green feathers tattoo on a calf" width="477" height="612" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Colour</span><span class="g-place">Calf</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="dotwork" data-title="Jewel &amp; lace mandala" data-style="Dotwork" data-place="Thigh">
         <button type="button" class="g-media" aria-label="Enlarge: jewel and lace mandala thigh tattoo">
-          <img src="/assets/w17-blackgrey-horse-FGlXZZqq.jpg" alt="Black and grey lace mandala thigh tattoo with a green jewel" width="486" height="495" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w17-blackgrey-horse-CysXDdjp.webp" type="image/webp"><img src="/assets/w17-blackgrey-horse-FGlXZZqq.jpg" alt="Black and grey lace mandala thigh tattoo with a green jewel" width="486" height="495" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Dotwork</span><span class="g-place">Thigh</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="blackgrey" data-title="Smoke &amp; skull" data-style="Black &amp; grey" data-place="Forearm">
         <button type="button" class="g-media" aria-label="Enlarge: dark skull in smoke tattoo on a forearm">
-          <img src="/assets/w18-blackgrey-skull-BpMvsgxE.jpg" alt="Dark black and grey skull emerging from smoke tattoo on a forearm" width="468" height="757" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w18-blackgrey-skull-F9IProCM.webp" type="image/webp"><img src="/assets/w18-blackgrey-skull-BpMvsgxE.jpg" alt="Dark black and grey skull emerging from smoke tattoo on a forearm" width="468" height="757" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Black &amp; grey</span><span class="g-place">Forearm</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="fineline" data-title="Bee &amp; blossoms" data-style="Fine line" data-place="Forearm">
         <button type="button" class="g-media" aria-label="Enlarge: fine line bee and flowers tattoo on a forearm">
-          <img src="/assets/w21-fineline-bee-Q8Ys1wuo.jpg" alt="Fine line bee with flowers and leaves tattoo on a forearm" width="485" height="486" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w21-fineline-bee-CfTGTEU_.webp" type="image/webp"><img src="/assets/w21-fineline-bee-Q8Ys1wuo.jpg" alt="Fine line bee with flowers and leaves tattoo on a forearm" width="485" height="486" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Fine line</span><span class="g-place">Forearm</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="realism" data-title="Through shattered glass" data-style="Realism" data-place="Leg">
         <button type="button" class="g-media" aria-label="Enlarge: realism portrait tattoo seen through shattered glass">
-          <img src="/assets/w20-realism-shattered-DdFp9YY1.jpg" alt="Black and grey realism portrait of a woman seen through shattered glass, tattoo on a leg" width="467" height="588" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w20-realism-shattered-fkoUALdE.webp" type="image/webp"><img src="/assets/w20-realism-shattered-DdFp9YY1.jpg" alt="Black and grey realism portrait of a woman seen through shattered glass, tattoo on a leg" width="467" height="588" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Realism</span><span class="g-place">Leg</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="blackgrey" data-title="Ornamental band" data-style="Fine line" data-place="Forearm">
         <button type="button" class="g-media" aria-label="Enlarge: black and grey ornamental floral band tattoo">
-          <img src="/assets/w13-fineline-ornband-Be6aaElv.jpg" alt="Black and grey ornamental floral band tattoo wrapping a forearm" width="462" height="622" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w13-fineline-ornband-Bo-EJEYl.webp" type="image/webp"><img src="/assets/w13-fineline-ornband-Be6aaElv.jpg" alt="Black and grey ornamental floral band tattoo wrapping a forearm" width="462" height="622" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Fine line</span><span class="g-place">Forearm</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="blackgrey" data-title="Script lettering" data-style="Lettering" data-place="Neck &amp; chest">
         <button type="button" class="g-media" aria-label="Enlarge: blackwork script lettering tattoo on a neck and chest">
-          <img src="/assets/w19-blackgrey-lettering-COmJH_pV.jpg" alt="Bold blackwork script lettering tattoo across a neck and chest" width="472" height="475" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w19-blackgrey-lettering-BYgMkahj.webp" type="image/webp"><img src="/assets/w19-blackgrey-lettering-COmJH_pV.jpg" alt="Bold blackwork script lettering tattoo across a neck and chest" width="472" height="475" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Lettering</span><span class="g-place">Neck &amp; chest</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="colour" data-title="Sugar skull" data-style="Colour" data-place="Forearm">
         <button type="button" class="g-media" aria-label="Enlarge: colour sugar skull tattoo on a forearm">
-          <img src="/assets/w22-colour-sugarskull-AjsRlmEt.jpg" alt="Colour Mexican sugar skull tattoo with flowers on a forearm" width="496" height="567" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w22-colour-sugarskull-Df0B_gaR.webp" type="image/webp"><img src="/assets/w22-colour-sugarskull-AjsRlmEt.jpg" alt="Colour Mexican sugar skull tattoo with flowers on a forearm" width="496" height="567" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Colour</span><span class="g-place">Forearm</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="blackgrey" data-title="Classical statue hand" data-style="Black &amp; grey" data-place="Hand">
         <button type="button" class="g-media" aria-label="Enlarge: classical statue black and grey hand tattoo">
-          <img src="/assets/w23-dotwork-eye-DaRnRDEx.jpg" alt="Black and grey classical statue face tattoo on a hand" width="488" height="498" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w23-dotwork-eye-RIfSYbDF.webp" type="image/webp"><img src="/assets/w23-dotwork-eye-DaRnRDEx.jpg" alt="Black and grey classical statue face tattoo on a hand" width="488" height="498" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Black &amp; grey</span><span class="g-place">Hand</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="colour" data-title="Japanese back piece" data-style="Colour" data-place="Full back">
         <button type="button" class="g-media" aria-label="Enlarge: Japanese dragon back piece tattoo">
-          <img src="/assets/w25-colour-japanese-DSbuw91S.jpg" alt="Japanese style dragon and moon back piece tattoo with colour" width="485" height="502" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w25-colour-japanese-BDWgI0ia.webp" type="image/webp"><img src="/assets/w25-colour-japanese-DSbuw91S.jpg" alt="Japanese style dragon and moon back piece tattoo with colour" width="485" height="502" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Colour</span><span class="g-place">Full back</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="colour" data-title="Tiger eyes" data-style="Colour realism" data-place="Forearm">
         <button type="button" class="g-media" aria-label="Enlarge: colour realism tiger eyes tattoo on a forearm">
-          <img src="/assets/w26-colour-tigereyes-DNq_T0pT.jpg" alt="Colour realism tiger eyes tattoo wrapping a forearm" width="482" height="416" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w26-colour-tigereyes-CdcJwYog.webp" type="image/webp"><img src="/assets/w26-colour-tigereyes-DNq_T0pT.jpg" alt="Colour realism tiger eyes tattoo wrapping a forearm" width="482" height="416" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Colour realism</span><span class="g-place">Forearm</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="colour" data-title="Watercolour lightbulb" data-style="Watercolour" data-place="Forearm">
         <button type="button" class="g-media" aria-label="Enlarge: watercolour lightbulb tattoo on a forearm">
-          <img src="/assets/w27-colour-balloon-Czk3_FA5.jpg" alt="Watercolour style lightbulb tattoo in pink and yellow on a forearm" width="486" height="432" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w27-colour-balloon-DuAd5yAO.webp" type="image/webp"><img src="/assets/w27-colour-balloon-Czk3_FA5.jpg" alt="Watercolour style lightbulb tattoo in pink and yellow on a forearm" width="486" height="432" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Watercolour</span><span class="g-place">Forearm</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="colour" data-title="Half rose, half mandala" data-style="Colour" data-place="Shoulder">
         <button type="button" class="g-media" aria-label="Enlarge: half dotwork mandala half colour rose shoulder tattoo">
-          <img src="/assets/w28-colour-rosemandala-CR03RIQH.jpg" alt="Shoulder tattoo split between a dotwork mandala and a vivid pink rose" width="487" height="631" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w28-colour-rosemandala-BxhWziGn.webp" type="image/webp"><img src="/assets/w28-colour-rosemandala-CR03RIQH.jpg" alt="Shoulder tattoo split between a dotwork mandala and a vivid pink rose" width="487" height="631" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Colour</span><span class="g-place">Shoulder</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="realism" data-title="Lioness &amp; cubs" data-style="Realism" data-place="Thigh">
         <button type="button" class="g-media" aria-label="Enlarge: black and grey lioness and cubs tattoo on a thigh">
-          <img src="/assets/w29-realism-lioness-u0306xQB.jpg" alt="Black and grey realism lioness with cubs and flowers tattoo on a thigh" width="482" height="802" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w29-realism-lioness-sRVYdYxM.webp" type="image/webp"><img src="/assets/w29-realism-lioness-u0306xQB.jpg" alt="Black and grey realism lioness with cubs and flowers tattoo on a thigh" width="482" height="802" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Realism</span><span class="g-place">Thigh</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="colour" data-title="Gypsy woman &amp; rose" data-style="Colour" data-place="Shoulder">
         <button type="button" class="g-media" aria-label="Enlarge: colour gypsy woman portrait with yellow rose tattoo">
-          <img src="/assets/w30-colour-gypsy-3sYgu-Nl.jpg" alt="Traditional colour gypsy woman portrait tattoo with a yellow rose on a shoulder" width="480" height="625" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w30-colour-gypsy-D7NkAO2E.webp" type="image/webp"><img src="/assets/w30-colour-gypsy-3sYgu-Nl.jpg" alt="Traditional colour gypsy woman portrait tattoo with a yellow rose on a shoulder" width="480" height="625" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Colour</span><span class="g-place">Shoulder</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="dotwork" data-title="Fern &amp; mandala sleeve" data-style="Dotwork" data-place="Full sleeve">
         <button type="button" class="g-media" aria-label="Enlarge: black dotwork fern and mandala full sleeve tattoo">
-          <img src="/assets/hero-ornamental-IsS1DHQh.jpg" alt="Black dotwork full sleeve with fern leaves and mandala patterns" width="485" height="622" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/hero-ornamental-BqiF8fnD.webp" type="image/webp"><img src="/assets/hero-ornamental-IsS1DHQh.jpg" alt="Black dotwork full sleeve with fern leaves and mandala patterns" width="485" height="622" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Dotwork</span><span class="g-place">Full sleeve</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="realism" data-title="Portrait leg sleeve" data-style="Realism" data-place="Leg sleeve">
         <button type="button" class="g-media" aria-label="Enlarge: black and grey portrait leg sleeve tattoo">
-          <img src="/assets/w31-realism-legsleeve-9sWk6xYd.jpg" alt="Black and grey realism portrait leg sleeve tattoo of a woman" width="486" height="630" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w31-realism-legsleeve-CHuvrBL9.webp" type="image/webp"><img src="/assets/w31-realism-legsleeve-9sWk6xYd.jpg" alt="Black and grey realism portrait leg sleeve tattoo of a woman" width="486" height="630" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Realism</span><span class="g-place">Leg sleeve</span></span>
         </button>
       </figure>
       <figure class="g-item" data-cat="colour" data-title="Skull &amp; serpent" data-style="Neo-traditional" data-place="Upper arm">
         <button type="button" class="g-media" aria-label="Enlarge: neo-traditional skull and snake colour tattoo">
-          <img src="/assets/w33-colour-skullsnake-CpcObqpp.jpg" alt="Neo-traditional colour skull and snake tattoo on an upper arm" width="470" height="477" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w33-colour-skullsnake-DU3Eip1O.webp" type="image/webp"><img src="/assets/w33-colour-skullsnake-CpcObqpp.jpg" alt="Neo-traditional colour skull and snake tattoo on an upper arm" width="470" height="477" loading="lazy" decoding="async"></picture>
           <span class="g-meta"><span class="g-style">Neo-traditional</span><span class="g-place">Upper arm</span></span>
         </button>
       </figure>
@@ -512,53 +585,53 @@
     <div class="board-wall">
       <figure class="polaroid p-item" data-title="Sacred geometry back piece" data-style="Dotwork" data-place="Full back" style="--r:-2.5deg">
         <button type="button" class="p-media g-media" aria-label="Enlarge: sacred geometry dotwork back piece">
-          <img src="/assets/w24-dotwork-backpiece-DcMQhKRq.jpg" alt="Large geometric dotwork back piece" width="475" height="490" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w24-dotwork-backpiece-BwHvjgnh.webp" type="image/webp"><img src="/assets/w24-dotwork-backpiece-DcMQhKRq.jpg" alt="Large geometric dotwork back piece" width="475" height="490" loading="lazy" decoding="async"></picture>
         </button>
         <figcaption>full back, sacred geometry</figcaption>
       </figure>
       <div class="sticky-note" style="--r:2.5deg">Yvelta&rsquo;s dragon &mdash; &ldquo;black &amp; white with colourful details &mdash; couldn&rsquo;t be happier.&rdquo;</div>
       <figure class="polaroid p-item" data-title="Child portrait" data-style="Realism" data-place="Forearm" style="--r:2deg">
         <button type="button" class="p-media g-media" aria-label="Enlarge: child portrait realism tattoo">
-          <img src="/assets/w15-realism-portrait-Oe4hkp6N.jpg" alt="Black and grey photorealistic child portrait tattoo on a forearm" width="483" height="777" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w15-realism-portrait-ByjkRXuO.webp" type="image/webp"><img src="/assets/w15-realism-portrait-Oe4hkp6N.jpg" alt="Black and grey photorealistic child portrait tattoo on a forearm" width="483" height="777" loading="lazy" decoding="async"></picture>
         </button>
         <figcaption>photo-realism, forearm</figcaption>
       </figure>
       <div class="sticky-note" style="--r:-2deg">&ldquo;I drove 2 hours to get my work done here &mdash; worth it.&rdquo;</div>
       <figure class="polaroid p-item" data-title="Neo-traditional portrait" data-style="Colour" data-place="Thigh" style="--r:2.4deg">
         <button type="button" class="p-media g-media" aria-label="Enlarge: neo-traditional colour portrait tattoo">
-          <img src="/assets/w09-colour-neotrad-DF9qsfl5.jpg" alt="Neo-traditional colour tattoo of a woman surrounded by autumn leaves" width="486" height="821" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w09-colour-neotrad-873R47e2.webp" type="image/webp"><img src="/assets/w09-colour-neotrad-DF9qsfl5.jpg" alt="Neo-traditional colour tattoo of a woman surrounded by autumn leaves" width="486" height="821" loading="lazy" decoding="async"></picture>
         </button>
         <figcaption>colour, thigh</figcaption>
       </figure>
       <figure class="polaroid p-item" data-title="Japanese dragon back" data-style="Colour" data-place="Full back" style="--r:-2.2deg">
         <button type="button" class="p-media g-media" aria-label="Enlarge: Japanese dragon back piece">
-          <img src="/assets/w25-colour-japanese-DSbuw91S.jpg" alt="Japanese style dragon and moon back piece" width="485" height="502" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w25-colour-japanese-BDWgI0ia.webp" type="image/webp"><img src="/assets/w25-colour-japanese-DSbuw91S.jpg" alt="Japanese style dragon and moon back piece" width="485" height="502" loading="lazy" decoding="async"></picture>
         </button>
         <figcaption>dragon &amp; moon, full back</figcaption>
       </figure>
       <div class="sticky-note" style="--r:3deg">&ldquo;They don&rsquo;t offer tattoos, they offer works of art.&rdquo; &mdash; Faby</div>
       <figure class="polaroid p-item" data-title="Portrait leg sleeve" data-style="Realism" data-place="Leg" style="--r:1.6deg">
         <button type="button" class="p-media g-media" aria-label="Enlarge: black and grey portrait leg sleeve">
-          <img src="/assets/w31-realism-legsleeve-9sWk6xYd.jpg" alt="Black and grey realism portrait leg sleeve tattoo" width="486" height="630" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w31-realism-legsleeve-CHuvrBL9.webp" type="image/webp"><img src="/assets/w31-realism-legsleeve-9sWk6xYd.jpg" alt="Black and grey realism portrait leg sleeve tattoo" width="486" height="630" loading="lazy" decoding="async"></picture>
         </button>
         <figcaption>black &amp; grey, leg sleeve</figcaption>
       </figure>
       <figure class="polaroid p-item" data-title="Classical statue" data-style="Black &amp; grey" data-place="Upper arm" style="--r:-2.6deg">
         <button type="button" class="p-media g-media" aria-label="Enlarge: classical statue black and grey tattoo">
-          <img src="/assets/hero-gladiator-ByjU0H7-.jpg" alt="Black and grey classical statue realism tattoo" width="470" height="797" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/hero-gladiator-pmQzMUeV.webp" type="image/webp"><img src="/assets/hero-gladiator-ByjU0H7-.jpg" alt="Black and grey classical statue realism tattoo" width="470" height="797" loading="lazy" decoding="async"></picture>
         </button>
         <figcaption>statue, upper arm</figcaption>
       </figure>
       <div class="sticky-note" style="--r:-2.4deg">Mona&rsquo;s nose piercing &mdash; saved, fixed &amp; healed.</div>
       <figure class="polaroid p-item" data-title="Skull &amp; serpent" data-style="Neo-traditional" data-place="Upper arm" style="--r:2.2deg">
         <button type="button" class="p-media g-media" aria-label="Enlarge: neo-traditional skull and snake tattoo">
-          <img src="/assets/w33-colour-skullsnake-CpcObqpp.jpg" alt="Neo-traditional colour skull and snake tattoo" width="470" height="477" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w33-colour-skullsnake-DU3Eip1O.webp" type="image/webp"><img src="/assets/w33-colour-skullsnake-CpcObqpp.jpg" alt="Neo-traditional colour skull and snake tattoo" width="470" height="477" loading="lazy" decoding="async"></picture>
         </button>
         <figcaption>skull &amp; serpent, colour</figcaption>
       </figure>
       <figure class="polaroid p-item" data-title="Ornamental band" data-style="Fine line" data-place="Forearm" style="--r:-1.6deg">
         <button type="button" class="p-media g-media" aria-label="Enlarge: ornamental floral band tattoo">
-          <img src="/assets/w13-fineline-ornband-Be6aaElv.jpg" alt="Black and grey ornamental floral band tattoo" width="462" height="622" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w13-fineline-ornband-Bo-EJEYl.webp" type="image/webp"><img src="/assets/w13-fineline-ornband-Be6aaElv.jpg" alt="Black and grey ornamental floral band tattoo" width="462" height="622" loading="lazy" decoding="async"></picture>
         </button>
         <figcaption>fine line, forearm</figcaption>
       </figure>
@@ -1048,16 +1121,16 @@
       </div>
       <div class="insta-grid">
         <a href="https://www.instagram.com/customink_tattoostudio/" target="_blank" rel="noopener" data-track="insta_tile" aria-label="Artist at work — see Instagram">
-          <img src="/assets/studio-artist-DW9LwTl7.jpg" alt="Resident tattoo artist working at Custom Ink Luxembourg studio" width="477" height="626" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/studio-artist-Bzkox5GF.webp" type="image/webp"><img src="/assets/studio-artist-DW9LwTl7.jpg" alt="Resident tattoo artist working at Custom Ink Luxembourg studio" width="477" height="626" loading="lazy" decoding="async"></picture>
         </a>
         <a href="https://www.instagram.com/customink_tattoostudio/" target="_blank" rel="noopener" data-track="insta_tile" aria-label="Geometric back piece — see Instagram">
-          <img src="/assets/w24-dotwork-backpiece-DcMQhKRq.jpg" alt="Geometric dotwork back piece tattoo" width="475" height="490" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w24-dotwork-backpiece-BwHvjgnh.webp" type="image/webp"><img src="/assets/w24-dotwork-backpiece-DcMQhKRq.jpg" alt="Geometric dotwork back piece tattoo" width="475" height="490" loading="lazy" decoding="async"></picture>
         </a>
         <a href="https://www.instagram.com/customink_tattoostudio/" target="_blank" rel="noopener" data-track="insta_tile" aria-label="The studio reception — see Instagram">
-          <img src="/assets/studio-reception-DzsNFfrh.jpg" alt="Custom Ink Luxembourg studio reception in Remerschen" width="460" height="355" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/studio-reception-B_Eog_jm.webp" type="image/webp"><img src="/assets/studio-reception-DzsNFfrh.jpg" alt="Custom Ink Luxembourg studio reception in Remerschen" width="460" height="355" loading="lazy" decoding="async"></picture>
         </a>
         <a href="https://www.instagram.com/customink_tattoostudio/" target="_blank" rel="noopener" data-track="insta_tile" aria-label="Fine line ornamental work — see Instagram">
-          <img src="/assets/w07-fineline-ornament-Bhnawbpi.jpg" alt="Fine line ornamental and floral tattoo" width="457" height="798" loading="lazy" decoding="async">
+          <picture><source srcset="/assets/w07-fineline-ornament-DNIyz50M.webp" type="image/webp"><img src="/assets/w07-fineline-ornament-Bhnawbpi.jpg" alt="Fine line ornamental and floral tattoo" width="457" height="798" loading="lazy" decoding="async"></picture>
         </a>
       </div>
     </div>
@@ -1194,7 +1267,6 @@
     </div>
   </div>
 </div>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+
 </body>
 </html>
