@@ -1,0 +1,303 @@
+[
+  {
+    "viewport": "320_small_mobile",
+    "winWidth": 322,
+    "docWidth": 322,
+    "docScrollsH": false,
+    "nav": {
+      "overflow": false,
+      "innerScrollWidth": 294,
+      "innerClientWidth": 294,
+      "burgerDisplay": "flex",
+      "navLinksDisplay": "none",
+      "navCtaBtnDisplay": "none"
+    },
+    "hero": {
+      "titleWidth": 262,
+      "titleRight": 291
+    },
+    "fbWall": {
+      "cols": 1,
+      "totalCardsRendered": 754
+    },
+    "masonry": {
+      "columns": "1"
+    },
+    "unclippedOverflowCount": 4,
+    "unclippedOverflowSample": [
+      {
+        "sel": "button.filter",
+        "right": 379,
+        "excess": 57
+      },
+      {
+        "sel": "button.filter",
+        "right": 473,
+        "excess": 151
+      },
+      {
+        "sel": "button.filter",
+        "right": 607,
+        "excess": 285
+      },
+      {
+        "sel": "button.filter",
+        "right": 694,
+        "excess": 372
+      }
+    ]
+  },
+  {
+    "viewport": "375_standard_mobile",
+    "winWidth": 376,
+    "docWidth": 376,
+    "docScrollsH": false,
+    "nav": {
+      "overflow": false,
+      "innerScrollWidth": 345,
+      "innerClientWidth": 345,
+      "burgerDisplay": "flex",
+      "navLinksDisplay": "none",
+      "navCtaBtnDisplay": "none"
+    },
+    "hero": {
+      "titleWidth": 311,
+      "titleRight": 343
+    },
+    "fbWall": {
+      "cols": 1,
+      "totalCardsRendered": 754
+    },
+    "masonry": {
+      "columns": "1"
+    },
+    "unclippedOverflowCount": 4,
+    "unclippedOverflowSample": [
+      {
+        "sel": "button.filter",
+        "right": 379,
+        "excess": 3
+      },
+      {
+        "sel": "button.filter",
+        "right": 473,
+        "excess": 97
+      },
+      {
+        "sel": "button.filter",
+        "right": 607,
+        "excess": 231
+      },
+      {
+        "sel": "button.filter",
+        "right": 694,
+        "excess": 318
+      }
+    ]
+  },
+  {
+    "viewport": "430_large_mobile",
+    "winWidth": 433,
+    "docWidth": 433,
+    "docScrollsH": false,
+    "nav": {
+      "overflow": false,
+      "innerScrollWidth": 396,
+      "innerClientWidth": 396,
+      "burgerDisplay": "flex",
+      "navLinksDisplay": "none",
+      "navCtaBtnDisplay": "none"
+    },
+    "hero": {
+      "titleWidth": 357,
+      "titleRight": 393
+    },
+    "fbWall": {
+      "cols": 1,
+      "totalCardsRendered": 754
+    },
+    "masonry": {
+      "columns": "1"
+    },
+    "unclippedOverflowCount": 3,
+    "unclippedOverflowSample": [
+      {
+        "sel": "button.filter",
+        "right": 473,
+        "excess": 40
+      },
+      {
+        "sel": "button.filter",
+        "right": 607,
+        "excess": 174
+      },
+      {
+        "sel": "button.filter",
+        "right": 694,
+        "excess": 261
+      }
+    ]
+  },
+  {
+    "viewport": "768_tablet_portrait",
+    "winWidth": 768,
+    "docWidth": 768,
+    "docScrollsH": false,
+    "nav": {
+      "overflow": false,
+      "innerScrollWidth": 707,
+      "innerClientWidth": 707,
+      "burgerDisplay": "flex",
+      "navLinksDisplay": "none",
+      "navCtaBtnDisplay": "none"
+    },
+    "hero": {
+      "titleWidth": 637,
+      "titleRight": 703
+    },
+    "fbWall": {
+      "cols": 2,
+      "totalCardsRendered": 754
+    },
+    "masonry": {
+      "columns": "2"
+    },
+    "unclippedOverflowCount": 0,
+    "unclippedOverflowSample": []
+  },
+  {
+    "viewport": "1024_tablet_landscape",
+    "winWidth": 1024,
+    "docWidth": 1009,
+    "docScrollsH": false,
+    "nav": {
+      "overflow": false,
+      "innerScrollWidth": 942,
+      "innerClientWidth": 942,
+      "burgerDisplay": "flex",
+      "navLinksDisplay": "none",
+      "navCtaBtnDisplay": "flex"
+    },
+    "hero": {
+      "titleWidth": 850,
+      "titleRight": 929
+    },
+    "fbWall": {
+      "cols": 3,
+      "totalCardsRendered": 754
+    },
+    "masonry": {
+      "columns": "2"
+    },
+    "unclippedOverflowCount": 0,
+    "unclippedOverflowSample": []
+  },
+  {
+    "viewport": "1100_small_laptop",
+    "winWidth": 1100,
+    "docWidth": 1085,
+    "docScrollsH": false,
+    "nav": {
+      "overflow": false,
+      "innerScrollWidth": 1012,
+      "innerClientWidth": 1012,
+      "burgerDisplay": "flex",
+      "navLinksDisplay": "none",
+      "navCtaBtnDisplay": "flex"
+    },
+    "hero": {
+      "titleWidth": 916,
+      "titleRight": 1001
+    },
+    "fbWall": {
+      "cols": 3,
+      "totalCardsRendered": 754
+    },
+    "masonry": {
+      "columns": "2"
+    },
+    "unclippedOverflowCount": 0,
+    "unclippedOverflowSample": []
+  },
+  {
+    "viewport": "1440_desktop",
+    "winWidth": 1440,
+    "docWidth": 1425,
+    "docScrollsH": false,
+    "nav": {
+      "overflow": false,
+      "innerScrollWidth": 1325,
+      "innerClientWidth": 1325,
+      "burgerDisplay": "none",
+      "navLinksDisplay": "flex",
+      "navCtaBtnDisplay": "flex"
+    },
+    "hero": {
+      "titleWidth": 625,
+      "titleRight": 723
+    },
+    "fbWall": {
+      "cols": 3,
+      "totalCardsRendered": 754
+    },
+    "masonry": {
+      "columns": "3"
+    },
+    "unclippedOverflowCount": 0,
+    "unclippedOverflowSample": []
+  },
+  {
+    "viewport": "1920_large_desktop",
+    "winWidth": 1920,
+    "docWidth": 1905,
+    "docScrollsH": false,
+    "nav": {
+      "overflow": false,
+      "innerScrollWidth": 1440,
+      "innerClientWidth": 1440,
+      "burgerDisplay": "none",
+      "navLinksDisplay": "flex",
+      "navCtaBtnDisplay": "flex"
+    },
+    "hero": {
+      "titleWidth": 683,
+      "titleRight": 963
+    },
+    "fbWall": {
+      "cols": 3,
+      "totalCardsRendered": 754
+    },
+    "masonry": {
+      "columns": "4"
+    },
+    "unclippedOverflowCount": 0,
+    "unclippedOverflowSample": []
+  },
+  {
+    "viewport": "2560_ultrawide",
+    "winWidth": 2560,
+    "docWidth": 2545,
+    "docScrollsH": false,
+    "nav": {
+      "overflow": false,
+      "innerScrollWidth": 1440,
+      "innerClientWidth": 1440,
+      "burgerDisplay": "none",
+      "navLinksDisplay": "flex",
+      "navCtaBtnDisplay": "flex"
+    },
+    "hero": {
+      "titleWidth": 683,
+      "titleRight": 1283
+    },
+    "fbWall": {
+      "cols": 3,
+      "totalCardsRendered": 754
+    },
+    "masonry": {
+      "columns": "4"
+    },
+    "unclippedOverflowCount": 0,
+    "unclippedOverflowSample": []
+  }
+]
