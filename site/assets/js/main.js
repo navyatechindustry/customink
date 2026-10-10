@@ -10,16 +10,149 @@
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
-  /* ---------------- analytics hooks (GTM-ready, consent-safe) ---------------- */
-  function track(event, data) {
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push(Object.assign({ event: event }, data || {}));
-    if (window.console && console.debug) console.debug('[track]', event, data || {});
+  /* ---------------- consent & analytics management (GDPR & ePrivacy) ---------------- */
+  var CONSENT_KEY = 'ci_cookie_consent_v1';
+  var GA_MEASUREMENT_ID = window.CI_GA_MEASUREMENT_ID || ''; // Configurable measurement ID (e.g. 'G-XXXXXXXXXX')
+
+  function getStoredConsent() {
+    try {
+      var raw = localStorage.getItem(CONSENT_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
   }
+
+  function saveConsent(analyticsAllowed) {
+    var state = {
+      necessary: true,
+      analytics: !!analyticsAllowed,
+      timestamp: new Date().toISOString(),
+      version: '1.0'
+    };
+    try {
+      localStorage.setItem(CONSENT_KEY, JSON.stringify(state));
+    } catch (e) {}
+    applyConsent(state);
+    return state;
+  }
+
+  var gaLoaded = false;
+  function applyConsent(state) {
+    if (state && state.analytics) {
+      if (GA_MEASUREMENT_ID && !gaLoaded) {
+        gaLoaded = true;
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA_MEASUREMENT_ID);
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ window.dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', GA_MEASUREMENT_ID, { anonymize_ip: true });
+      }
+    }
+  }
+
+  function track(event, data) {
+    var c = getStoredConsent();
+    if (!c || !c.analytics) {
+      // Prior consent required: suppress tracking if analytics consent is not granted
+      return;
+    }
+    window.dataLayer = window.dataLayer || [];
+    // Sanitize payload: never forward PII or sensitive form values
+    var cleanData = Object.assign({ event: event }, data || {});
+    window.dataLayer.push(cleanData);
+    if (window.console && console.debug) console.debug('[track]', event, cleanData);
+  }
+
   document.addEventListener('click', function (e) {
     var t = e.target.closest('[data-track]');
     if (t) track(t.getAttribute('data-track'), { label: (t.textContent || '').trim().slice(0, 60) });
   });
+
+  // Cookie banner & modal controllers
+  (function initConsentUI() {
+    var banner = $('#cookieBanner');
+    var modalBackdrop = $('#cookieModalBackdrop');
+    var chkAnalytics = $('#chkAnalyticsCookies');
+    var current = getStoredConsent();
+
+    if (current) {
+      applyConsent(current);
+    } else if (banner) {
+      banner.hidden = false;
+    }
+
+    var btnAccept = $('#btnAcceptAllCookies');
+    if (btnAccept) {
+      btnAccept.addEventListener('click', function () {
+        saveConsent(true);
+        if (banner) banner.hidden = true;
+      });
+    }
+
+    var btnReject = $('#btnRejectCookies');
+    if (btnReject) {
+      btnReject.addEventListener('click', function () {
+        saveConsent(false);
+        if (banner) banner.hidden = true;
+      });
+    }
+
+    var btnCustomize = $('#btnCustomizeCookies');
+    if (btnCustomize) {
+      btnCustomize.addEventListener('click', function () {
+        if (banner) banner.hidden = true;
+        openCookieModal();
+      });
+    }
+
+    function openCookieModal() {
+      if (!modalBackdrop) return;
+      var c = getStoredConsent();
+      if (chkAnalytics) chkAnalytics.checked = !!(c && c.analytics);
+      modalBackdrop.hidden = false;
+      var firstBtn = modalBackdrop.querySelector('button');
+      if (firstBtn) try { firstBtn.focus(); } catch (e) {}
+    }
+
+    function closeCookieModal() {
+      if (modalBackdrop) modalBackdrop.hidden = true;
+    }
+
+    var btnCloseModal = $('#btnCloseCookieModal');
+    if (btnCloseModal) btnCloseModal.addEventListener('click', closeCookieModal);
+
+    var btnSavePrefs = $('#btnSaveCookiePreferences');
+    if (btnSavePrefs) {
+      btnSavePrefs.addEventListener('click', function () {
+        var allow = chkAnalytics ? chkAnalytics.checked : false;
+        saveConsent(allow);
+        closeCookieModal();
+        if (banner) banner.hidden = true;
+      });
+    }
+
+    document.addEventListener('click', function (e) {
+      var trigger = e.target.closest('#openCookieSettings, [data-open-cookie-settings]');
+      if (trigger) {
+        e.preventDefault();
+        openCookieModal();
+      }
+    });
+
+    if (modalBackdrop) {
+      modalBackdrop.addEventListener('click', function (e) {
+        if (e.target === modalBackdrop) closeCookieModal();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !modalBackdrop.hidden) closeCookieModal();
+      });
+    }
+  })();
 
   /* ---------------- sticky nav ---------------- */
   var nav = $('#nav');
@@ -168,40 +301,122 @@
   var form = $('#bookForm');
   if (form) {
     var success = $('#frmSuccess');
+    var submitBtn = $('#btnSubmitForm');
     function err(name, show, msg) {
       var input = form.querySelector('[name="' + name + '"]');
+      if (!input) return;
       var field = input.closest('.frm-field');
       if (!field) return;
       field.classList.toggle('is-error', show);
+      input.setAttribute('aria-invalid', show ? 'true' : 'false');
       var m = field.querySelector('.err-msg');
       if (show && msg && !m) {
         m = document.createElement('p');
         m.className = 'err-msg';
+        m.setAttribute('role', 'alert');
         m.textContent = msg;
         field.appendChild(m);
-      } else if (m) { m.textContent = show ? (msg || '') : ''; }
+      } else if (m) {
+        m.textContent = show ? (msg || '') : '';
+      }
     }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var v = function (n) { var el = form.querySelector('[name="' + n + '"]'); return el ? el.value.trim() : ''; };
-      var ok = true;
-      [['name', 'Please add your name.'], ['phone', 'Please add a phone number.'],
-       ['email', 'Please add your email.'], ['description', 'Tell us briefly about your idea.']]
-        .forEach(function (pair) {
-          var empty = !v(pair[0]);
-          err(pair[0], empty, pair[1]);
-          if (empty) ok = false;
-        });
-      var email = v('email');
-      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err('email', true, 'That email does not look right.'); ok = false; }
-      if (!form.querySelector('[name="consent"]').checked) {
-        ok = false;
-        track('form_consent_missing');
-        var chk = $('#f-consent');
-        chk.focus();
+
+      // Anti-spam honeypot check
+      var hp = form.querySelector('[name="_hp_company"]');
+      if (hp && hp.value.trim() !== '') {
+        // Silently stop automated bot submission
         return;
       }
-      if (!ok) return;
+
+      var v = function (n) { var el = form.querySelector('[name="' + n + '"]'); return el ? el.value.trim() : ''; };
+      var ok = true;
+      var firstBadEl = null;
+
+      // Name validation: required, 2-100 characters
+      var nameVal = v('name');
+      if (!nameVal) {
+        err('name', true, 'Please add your name.');
+        ok = false;
+        if (!firstBadEl) firstBadEl = form.querySelector('[name="name"]');
+      } else if (nameVal.length < 2) {
+        err('name', true, 'Please enter your full name (at least 2 letters).');
+        ok = false;
+        if (!firstBadEl) firstBadEl = form.querySelector('[name="name"]');
+      } else {
+        err('name', false);
+      }
+
+      // Phone validation: required, valid characters
+      var phoneVal = v('phone');
+      var phoneRegex = /^[+0-9\s\-().]{6,25}$/;
+      if (!phoneVal) {
+        err('phone', true, 'Please add a phone number.');
+        ok = false;
+        if (!firstBadEl) firstBadEl = form.querySelector('[name="phone"]');
+      } else if (!phoneRegex.test(phoneVal)) {
+        err('phone', true, 'Please enter a valid phone number with country code.');
+        ok = false;
+        if (!firstBadEl) firstBadEl = form.querySelector('[name="phone"]');
+      } else {
+        err('phone', false);
+      }
+
+      // Email validation: required, standard RFC format
+      var emailVal = v('email');
+      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      if (!emailVal) {
+        err('email', true, 'Please add your email.');
+        ok = false;
+        if (!firstBadEl) firstBadEl = form.querySelector('[name="email"]');
+      } else if (!emailRegex.test(emailVal)) {
+        err('email', true, 'That email does not look right.');
+        ok = false;
+        if (!firstBadEl) firstBadEl = form.querySelector('[name="email"]');
+      } else {
+        err('email', false);
+      }
+
+      // Description validation: required, min 10 chars
+      var descVal = v('description');
+      if (!descVal) {
+        err('description', true, 'Tell us briefly about your idea.');
+        ok = false;
+        if (!firstBadEl) firstBadEl = form.querySelector('[name="description"]');
+      } else if (descVal.length < 10) {
+        err('description', true, 'Please share a few more details about your concept (at least 10 characters).');
+        ok = false;
+        if (!firstBadEl) firstBadEl = form.querySelector('[name="description"]');
+      } else {
+        err('description', false);
+      }
+
+      // Consent validation
+      var consentChk = form.querySelector('[name="consent"]');
+      if (!consentChk || !consentChk.checked) {
+        ok = false;
+        track('form_consent_missing');
+        var chkField = form.querySelector('.frm-check');
+        if (chkField) chkField.classList.add('is-error');
+        if (!firstBadEl) firstBadEl = consentChk;
+      } else {
+        var chkFieldClean = form.querySelector('.frm-check');
+        if (chkFieldClean) chkFieldClean.classList.remove('is-error');
+      }
+
+      if (!ok) {
+        if (firstBadEl) try { firstBadEl.focus(); } catch (errFocus) {}
+        return;
+      }
+
+      // Prevent duplicate clicks
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.setAttribute('aria-disabled', 'true');
+        submitBtn.textContent = 'Preparing email draft…';
+      }
 
       var svc = (form.querySelector('[name="service"]:checked') || {}).value || 'Tattoo';
       var subject = 'Appointment request — ' + svc + ' — ' + v('name');
@@ -226,11 +441,21 @@
                  '&body=' + encodeURIComponent(lines.join('\n'));
       track('form_submitted', { service: svc });
       window.location.href = href;
-      success.hidden = false;
-      $$('.frm-row, .frm-field:not(:last-of-type), .frm-actions', form).forEach(function (el) {
-        if (el !== success && !success.contains(el)) el.style.display = 'none';
-      });
-      success.focus();
+      if (success) {
+        success.hidden = false;
+        $$('.frm-row, .frm-field:not(:last-of-type), .frm-actions', form).forEach(function (el) {
+          if (el !== success && !success.contains(el)) el.style.display = 'none';
+        });
+        success.focus();
+      }
+
+      setTimeout(function () {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.removeAttribute('aria-disabled');
+          submitBtn.textContent = 'Request appointment';
+        }
+      }, 4000);
     });
   }
 
@@ -268,15 +493,31 @@
   /* ---------------- mobile action bar ---------------- */
   var bar = $('#actionbar');
   var hero = $('.hero');
+  var bookSec = $('#book');
   if (bar && hero) {
-    var heroH = hero.offsetHeight;
     function onScrollBar() {
-      var show = window.scrollY > heroH * 0.75;
+      var heroH = hero.offsetHeight;
+      var scrollY = window.scrollY;
+      var pastHero = scrollY > heroH * 0.75;
+      var atBookingForm = false;
+      if (bookSec) {
+        var rect = bookSec.getBoundingClientRect();
+        atBookingForm = (rect.top <= window.innerHeight * 0.6) && (rect.bottom >= 100);
+      }
+      var show = pastHero && !atBookingForm;
       bar.hidden = false;
       bar.classList.toggle('is-visible', show);
       document.body.classList.toggle('ab-shown', show);
     }
     window.addEventListener('scroll', onScrollBar, { passive: true });
+    document.addEventListener('focusin', function (e) {
+      if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) {
+        bar.classList.add('is-hidden-keyboard');
+      }
+    });
+    document.addEventListener('focusout', function () {
+      bar.classList.remove('is-hidden-keyboard');
+    });
     onScrollBar();
   }
 
@@ -380,7 +621,7 @@
         a: 'Custom Ink Luxembourg, 103 Waistrooss, L-5440 Remerschen \u2014 dans la r\u00e9gion de la Moselle, au sud-est du Luxembourg. Utilisez la carte interactive dans la section <a href="#visit">Visiter</a> : \u00ab Fetch my location \u00bb trace votre itin\u00e9raire.',
         n: ['Horaires', 'R\u00e9server'] }
     ];
-    var FALLBACK = 'That one is better answered by a human \u2014 and they reply quickly: <a href="' + WA_URL + '" target="_blank" rel="noopener">WhatsApp</a> \u00b7 <a href="tel:+35226550766">+352 26 55 07 66</a> \u00b7 <a href="mailto:info@customink.lu">info@customink.lu</a>.';
+    var FALLBACK = 'That one is best answered directly by the studio team: <a href="' + WA_URL + '" target="_blank" rel="noopener">WhatsApp</a> · <a href="tel:+35226550766">+352 26 55 07 66</a> · <a href="mailto:info@customink.lu">info@customink.lu</a>. Reach out directly and the team will be happy to assist you.';
     var DEFAULT_CHIPS = ['Tattoo styles', 'Piercing', 'How do I book?', 'Prices', 'Opening hours'];
     function match(q) {
       q = ' ' + q.toLowerCase() + ' ';
@@ -392,15 +633,46 @@
       }
       return null;
     }
+    var SELF_HARM_TERMS = [
+      'suicide', 'kill myself', 'end my life', 'want to die', 'harm myself', 'self harm', 'self-harm',
+      'cutting myself', 'cut myself', 'slit', 'overdose', 'hang myself', 'take my life',
+      'mourir', 'me tuer', 'suicider', 'mettre fin a mes jours', 'mettre fin à mes jours', 'me faire du mal', 'automutilation',
+      'umbringen', 'selbstmord', 'suizid', 'mein leben beenden', 'ritzen', 'mich verletzen'
+    ];
+
+    function isSelfHarmQuery(q) {
+      var s = (' ' + (q || '').toLowerCase() + ' ').replace(/[^a-z0-9àâäéèêëîïôöùûüç -]/g, ' ');
+      for (var i = 0; i < SELF_HARM_TERMS.length; i++) {
+        if (s.indexOf(' ' + SELF_HARM_TERMS[i] + ' ') !== -1 || s.indexOf(SELF_HARM_TERMS[i]) !== -1) return true;
+      }
+      return false;
+    }
+
+    var CRISIS_RESPONSE = 'If you are going through a difficult time, please know that you are not alone and compassionate help is available right now.<br><br>' +
+      '<strong>Immediate Emergency &amp; Crisis Support:</strong><br>' +
+      '• <strong>Emergency in Luxembourg &amp; Europe:</strong> Call <strong>112</strong> (free, 24/7).<br>' +
+      '• <strong>SOS Détresse (Luxembourg Helpline):</strong> Call <strong>45 45 45</strong> or visit <a href="https://sosdetresse.lu" target="_blank" rel="noopener">sosdetresse.lu</a>.<br>' +
+      '• <strong>Kanner- a Jugendtelefon (Helpline for youth):</strong> Call <strong>116 111</strong>.<br>' +
+      '• <strong>International Crisis Support:</strong> Find free confidential crisis support worldwide at <a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a>.<br><br>' +
+      'Please reach out to one of these support services or to a trusted person near you. The studio concierge is an automated system and cannot provide medical or mental health advice.';
+
     return {
-      greeting: 'Hey, welcome to Custom Ink \u2733 I know the studio inside out \u2014 styles, piercing, booking, hours, prices, aftercare. What can I point you to?',
+      greeting: 'Hey! Welcome to Custom Ink ✳ I’m the automated studio concierge. I can guide you through tattoo styles, piercing info, hours, and booking steps. (I cannot confirm bookings or provide medical advice). What can I help you explore?',
       chips: DEFAULT_CHIPS,
+      isSafetyRisk: function (q) {
+        return isSelfHarmQuery(q);
+      },
+      safetyAnswer: function () {
+        return CRISIS_RESPONSE;
+      },
       answer: function (q) {
+        if (isSelfHarmQuery(q)) return CRISIS_RESPONSE;
         var hit = match(q);
         if (!hit) return FALLBACK;
         return hit.hand ? hit.a + ' ' + hand : hit.a;
       },
       nextFor: function (q) {
+        if (isSelfHarmQuery(q)) return ['Opening hours', 'Where are you?'];
         var hit = match(q);
         return (hit && hit.n) || DEFAULT_CHIPS;
       }
@@ -447,6 +719,11 @@
   }
   function ask(text) {
     bubble(text.replace(/&/g, '&amp;').replace(/</g, '&lt;'), 'user');
+    if (CONCIERGE.isSafetyRisk(text)) {
+      // Prioritize safety & privacy: NEVER send sensitive crisis text to analytics
+      botSay(CONCIERGE.safetyAnswer(), ['Opening hours', 'Where are you?']);
+      return;
+    }
     track(text.length <= 24 ? 'concierge_topic' : 'concierge_question', { topic: text.slice(0, 60) });
     botSay(CONCIERGE.answer(text), CONCIERGE.nextFor(text));
   }

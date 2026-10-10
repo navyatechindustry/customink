@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Not Found — Custom Ink Luxembourg</title>
+<meta name="description" content="The requested page could not be found. Return to Custom Ink Luxembourg to explore our tattoo portfolio, artists, piercing studio, and booking.">
+<meta name="robots" content="noindex, follow">
+
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="assets/css/style.css?v=26">
+<style>
+  .error-page {
+    min-height: calc(100svh - 40px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: clamp(40px, 8vw, 80px) var(--gutter);
+    background: var(--bg);
+  }
+  .error-card {
+    max-width: 680px;
+    background: var(--bg);
+    border: var(--bd3);
+    box-shadow: var(--sh-lg);
+    padding: clamp(40px, 6vw, 70px) clamp(24px, 5vw, 56px);
+  }
+  .error-code {
+    font-family: var(--disp);
+    font-size: clamp(5rem, 16vw, 10rem);
+    line-height: 0.9;
+    color: var(--fg);
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+  }
+  .error-code::after {
+    content: ".";
+    color: var(--acc);
+  }
+  .error-title {
+    font-family: var(--disp);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .error-desc {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--gray);
+    margin-bottom: 36px;
+    max-width: 480px;
+    margin-inline: auto;
+  }
+  .error-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .error-btn {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 14px 24px;
+    border: var(--bd);
+    box-shadow: var(--sh);
+    color: var(--fg);
+    background: var(--bg);
+    transition: transform 0.15s var(--ease), box-shadow 0.15s, background 0.15s;
+    text-decoration: none;
+  }
+  .error-btn:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--fg);
+  }
+  .error-btn.btn-primary {
+    background: var(--acc);
+  }
+  .error-btn.btn-primary:hover {
+    background: #E8D21E;
+  }
+</style>
+</head>
+<body>
+<main class="error-page">
+  <div class="error-card">
+    <p class="eyebrow" style="margin-bottom: 16px;">Error 404</p>
+    <div class="error-code">404</div>
+    <h1 class="error-title">Page Not Found</h1>
+    <p class="error-desc">The page you are looking for does not exist or may have moved. Explore our tattoo artists, styles, and studio information below.</p>
+    <div class="error-actions">
+      <a class="error-btn btn-primary" href="index.html">← Back to Homepage</a>
+      <a class="error-btn" href="index.html#portfolio">View Tattoo Styles</a>
+      <a class="error-btn" href="index.html#book">Book Consultation</a>
+    </div>
+  </div>
+</main>
+<footer class="footer" style="margin-top: 0;">
+  <div class="container">
+    <div class="foot-base">
+      <div class="foot-base-left">
+        <p>© 2026 Custom Ink Luxembourg. All rights reserved.</p>
+      </div>
+      <div class="foot-base-right">
+        <a class="foot-legal" href="privacy.html" style="color: #CFCFCF; margin-right: 16px;">Privacy Policy</a>
+        <a class="foot-legal" href="terms.html" style="color: #CFCFCF;">Terms &amp; Conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

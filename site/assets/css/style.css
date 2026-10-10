@@ -1308,10 +1308,14 @@ html.js .reveal.in { opacity: 1; transform: none; }
 .foot-col p { font-size: 13.5px; line-height: 1.75; margin-bottom: 16px; color: #CFCFCF; }
 .foot-legal { text-decoration: underline !important; text-decoration-thickness: 2px !important; text-underline-offset: 4px; }
 .foot-base {
-  display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap;
   border-top: 2px solid #3A3A3A; padding-top: 26px;
   font-family: var(--mono); font-size: 11.5px; color: var(--gray-2);
 }
+.foot-base-left { display: flex; flex-direction: column; gap: 4px; }
+.foot-base-right { display: flex; flex-direction: column; align-items: flex-end; text-align: right; margin-left: auto; }
+.foot-credit { font-family: var(--mono); font-size: 11.5px; color: var(--gray-2); }
+
 
 /* ============================================================
    CONCIERGE
@@ -1411,6 +1415,7 @@ html.js .reveal.in { opacity: 1; transform: none; }
   transform: translateY(100%); transition: transform 0.4s var(--ease);
 }
 .actionbar.is-visible { transform: none; }
+.actionbar.is-hidden-keyboard { transform: translateY(110%) !important; opacity: 0; pointer-events: none; }
 .ab-btn {
   padding: 15px 10px calc(15px + env(safe-area-inset-bottom, 0px)); text-align: center;
   font-family: var(--mono); font-size: 11.5px; font-weight: 700; letter-spacing: 0.12em;
@@ -1606,6 +1611,7 @@ html.js .reveal.in { opacity: 1; transform: none; }
   /* Footer */
   .foot-grid { grid-template-columns: 1fr; gap: 32px; }
   .foot-base { flex-direction: column; gap: 10px; align-items: flex-start; }
+  .foot-base-right { align-items: flex-start; text-align: left; margin-left: 0; }
   .foot-brand .brand-main { font-size: 28px; }
 
   /* Floating controls & Concierge panel fix */
@@ -1701,4 +1707,180 @@ body.menu-open .wa-fab {
   .g-place-cursor { animation: none; }
   .polaroid, .sticky-note, .step { transition: none !important; }
 }
+
+/* ============================================================
+   AI CONCIERGE NOTICE & SAFETY
+   ============================================================ */
+.conc-ai-notice {
+  background: var(--bg);
+  border-bottom: var(--bd);
+  padding: 10px 18px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--gray);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.conc-ai-tag {
+  display: inline-block;
+  align-self: flex-start;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--acc);
+  color: var(--fg);
+  padding: 2px 7px;
+  border: 1px solid var(--fg);
+}
+
+/* ============================================================
+   COOKIE CONSENT BANNER & MODAL
+   ============================================================ */
+.cookie-banner {
+  position: fixed;
+  bottom: calc(var(--frame-gap, 1cm) + 14px);
+  left: calc(var(--frame-gap, 1cm) + 14px);
+  max-width: min(440px, calc(100vw - 32px));
+  background: var(--bg);
+  border: var(--bd3);
+  box-shadow: 8px 8px 0 var(--fg);
+  padding: 22px 20px 18px;
+  z-index: 180;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cookie-banner-title {
+  font-family: var(--disp);
+  font-size: 20px;
+  text-transform: uppercase;
+  color: var(--fg);
+  margin-bottom: 2px;
+}
+.cookie-banner-text {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--gray);
+}
+.cookie-banner-text a {
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.cookie-banner-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 4px;
+}
+.cookie-btn {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 9px 13px;
+  border: var(--bd);
+  box-shadow: var(--sh-sm);
+  background: var(--bg);
+  color: var(--fg);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.cookie-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--fg);
+}
+.cookie-btn-primary {
+  background: var(--acc);
+}
+.cookie-btn-subtle {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--gray);
+  padding: 8px 6px;
+}
+.cookie-btn-subtle:hover {
+  color: var(--fg);
+  transform: none;
+  box-shadow: none;
+}
+
+/* Modal for customize */
+.cookie-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 250;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.cookie-modal {
+  background: var(--bg);
+  border: var(--bd3);
+  box-shadow: 10px 10px 0 var(--fg);
+  max-width: 520px;
+  width: 100%;
+  padding: 26px 24px 22px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.cookie-modal-title {
+  font-family: var(--disp);
+  font-size: 24px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.cookie-modal-intro {
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+.cookie-cat {
+  border: var(--bd);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  background: #FAFAFA;
+}
+.cookie-cat-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.cookie-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border: 1px solid var(--fg);
+  background: var(--acc);
+}
+.cookie-cat-desc {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--gray);
+}
+.cookie-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 18px;
+}
+
 

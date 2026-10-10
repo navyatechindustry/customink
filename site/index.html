@@ -16,6 +16,7 @@
 <meta property="og:description" content="Premium tattoo &amp; piercing studio in Remerschen, Luxembourg. All styles, one place — custom tattoos and precision piercing by international artists.">
 <meta property="og:url" content="https://customink.lu/">
 <meta property="og:image" content="https://customink.lu/assets/img/og.jpg">
+<meta property="og:image:alt" content="Custom Ink Luxembourg — Tattoo &amp; Piercing Atelier in Remerschen">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="en_GB">
@@ -24,8 +25,12 @@
 <meta name="twitter:title" content="Custom Ink Luxembourg — Your Skin. Your Story.">
 <meta name="twitter:description" content="Premium tattoo &amp; piercing studio in Remerschen, Luxembourg. 4.9★ · 377 Google reviews.">
 <meta name="twitter:image" content="https://customink.lu/assets/img/og.jpg">
+<meta name="twitter:image:alt" content="Custom Ink Luxembourg — Tattoo &amp; Piercing Atelier in Remerschen">
 
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
 <link rel="preload" href="assets/fonts/cormorant-garamond-500.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/manrope-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/fonts/fonts.css">
@@ -224,9 +229,9 @@
       </div>
     </div>
     <div class="hero-art" aria-hidden="true">
-      <figure class="ha ha-1 reveal-load"><img src="assets/img/work/hero-gladiator.jpg" alt="" width="470" height="797" loading="eager" decoding="async"></figure>
-      <figure class="ha ha-2 reveal-load"><img src="assets/img/work/hero-ornamental.jpg" alt="" width="485" height="622" loading="eager" decoding="async"></figure>
-      <figure class="ha ha-3 reveal-load"><img src="assets/img/work/hero-chest.jpg" alt="" width="487" height="796" loading="eager" decoding="async"></figure>
+      <figure class="ha ha-1 reveal-load"><img src="assets/img/work/hero-gladiator.jpg" alt="Black and grey realism gladiator tattoo artwork" width="470" height="797" loading="eager" decoding="async"></figure>
+      <figure class="ha ha-2 reveal-load"><img src="assets/img/work/hero-ornamental.jpg" alt="Fine line ornamental tattoo design" width="485" height="622" loading="eager" decoding="async"></figure>
+      <figure class="ha ha-3 reveal-load"><img src="assets/img/work/hero-chest.jpg" alt="Dark realism chest tattoo piece" width="487" height="796" loading="eager" decoding="async"></figure>
     </div>
   </div>
   <a class="scroll-cue" href="#studio" aria-label="Scroll to introduction"><span></span></a>
@@ -851,9 +856,9 @@
       <div class="book-copy">
         <p class="eyebrow reveal">10 — Appointment request</p>
         <h2 class="reveal">Tell us what<br>you have in mind.</h2>
-        <p class="reveal">Fill in the form and the studio gets back to you personally to confirm
-        availability, artist and details. <strong>A request is not yet an appointment</strong> —
-        nothing is fixed until the team confirms it with you.</p>
+        <p class="reveal">Fill in the form and our team will review your request and get back to you personally to discuss
+        availability, artist and project details. <strong>A request is not yet an appointment</strong> —
+        nothing is booked until the team confirms it with you.</p>
         <p class="reveal">Prefer to talk first? That works too.</p>
         <div class="book-direct reveal">
           <a class="direct" href="tel:+35226550766" data-track="phone_call">
@@ -873,19 +878,27 @@
 
       <div class="book-form-wrap reveal">
         <form class="book-form" id="bookForm" novalidate>
+          <!-- Anti-spam honeypot (invisible to real visitors) -->
+          <div style="position:absolute;left:-9999px;opacity:0;pointer-events:none;" aria-hidden="true">
+            <label for="f-hp">Leave this field blank</label>
+            <input type="text" name="_hp_company" id="f-hp" tabindex="-1" autocomplete="off">
+          </div>
           <div class="frm-row">
             <div class="frm-field">
               <label for="f-name">Name <span class="req" aria-hidden="true">*</span></label>
-              <input type="text" id="f-name" name="name" autocomplete="name" required>
+              <input type="text" id="f-name" name="name" autocomplete="name" required aria-required="true" aria-describedby="err-name">
+              <p class="err-msg" id="err-name" role="alert"></p>
             </div>
             <div class="frm-field">
               <label for="f-phone">Phone <span class="req" aria-hidden="true">*</span></label>
-              <input type="tel" id="f-phone" name="phone" autocomplete="tel" required>
+              <input type="tel" id="f-phone" name="phone" autocomplete="tel" required aria-required="true" aria-describedby="err-phone">
+              <p class="err-msg" id="err-phone" role="alert"></p>
             </div>
           </div>
           <div class="frm-field">
             <label for="f-email">Email <span class="req" aria-hidden="true">*</span></label>
-            <input type="email" id="f-email" name="email" autocomplete="email" required>
+            <input type="email" id="f-email" name="email" autocomplete="email" required aria-required="true" aria-describedby="err-email">
+            <p class="err-msg" id="err-email" role="alert"></p>
           </div>
           <fieldset class="frm-field">
             <legend>I’m interested in <span class="req" aria-hidden="true">*</span></legend>
@@ -929,23 +942,24 @@
           </div>
           <div class="frm-field">
             <label for="f-desc">Describe your idea <span class="req" aria-hidden="true">*</span></label>
-            <textarea id="f-desc" name="description" rows="4" required placeholder="The idea, the story behind it, references you like — anything that helps. You can send images after the studio replies."></textarea>
+            <textarea id="f-desc" name="description" rows="4" required aria-required="true" aria-describedby="err-desc" placeholder="The idea, the story behind it, references you like — anything that helps. You can send images after the studio replies."></textarea>
+            <p class="err-msg" id="err-desc" role="alert"></p>
           </div>
           <div class="frm-field frm-check">
-            <label class="chk">
-              <input type="checkbox" id="f-consent" name="consent" required>
-              <span>I agree that the studio may contact me about this request. <span class="req" aria-hidden="true">*</span></span>
+            <label class="chk" for="f-consent">
+              <input type="checkbox" id="f-consent" name="consent" required aria-required="true">
+              <span>I understand that submitting this form formats an email enquiry to the studio to evaluate my consultation request, as described in the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>. <span class="req" aria-hidden="true">*</span></span>
             </label>
           </div>
           <div class="frm-actions">
-            <button class="btn btn-gold btn-lg" type="submit" data-track="form_submit">Request appointment</button>
-            <p class="frm-note">Your request opens as an email to the studio — nothing is sent automatically, and the appointment is fixed only once the team confirms.</p>
+            <button class="btn btn-gold btn-lg" type="submit" id="btnSubmitForm" data-track="form_submit">Request appointment</button>
+            <p class="frm-note">Data protection: Your details are processed exclusively to schedule your consultation. Submitting opens a direct email draft to info@customink.lu — nothing is stored on a web server or sent until you press send in your email client. A consultation request does not confirm a booking or guarantee artist availability.</p>
           </div>
           <div class="frm-success" id="frmSuccess" hidden tabindex="-1">
             <h3>Your request is ready to send ✳</h3>
-            <p>Your email app should have opened with everything filled in. Press send there —
-            the studio will get back to you shortly to confirm availability.</p>
-            <p class="frm-success-alt">No email app? Write to <a href="mailto:info@customink.lu">info@customink.lu</a>
+            <p>Your email app should have opened with everything filled in. Press send there — our team will review your request and get back to you with availability and details.</p>
+            <p class="frm-success-alt">Note: Submitting this form prepares an enquiry draft. It does not confirm a booking or guarantee artist availability until confirmed by the studio.</p>
+            <p class="frm-success-alt">No email app? Write directly to <a href="mailto:info@customink.lu">info@customink.lu</a>
             or call <a href="tel:+35226550766">+352 26 55 07 66</a>.</p>
           </div>
         </form>
@@ -1031,16 +1045,16 @@
       </div>
       <div class="insta-grid">
         <a href="https://www.instagram.com/customink_tattoostudio/" target="_blank" rel="noopener" data-track="insta_tile" aria-label="Artist at work — see Instagram">
-          <img src="assets/img/studio/studio-artist.jpg" alt="" width="477" height="626" loading="lazy" decoding="async">
+          <img src="assets/img/studio/studio-artist.jpg" alt="Resident tattoo artist working at Custom Ink Luxembourg studio" width="477" height="626" loading="lazy" decoding="async">
         </a>
         <a href="https://www.instagram.com/customink_tattoostudio/" target="_blank" rel="noopener" data-track="insta_tile" aria-label="Geometric back piece — see Instagram">
-          <img src="assets/img/work/w24-dotwork-backpiece.jpg" alt="" width="475" height="490" loading="lazy" decoding="async">
+          <img src="assets/img/work/w24-dotwork-backpiece.jpg" alt="Geometric dotwork back piece tattoo" width="475" height="490" loading="lazy" decoding="async">
         </a>
         <a href="https://www.instagram.com/customink_tattoostudio/" target="_blank" rel="noopener" data-track="insta_tile" aria-label="The studio reception — see Instagram">
-          <img src="assets/img/studio/studio-reception.jpg" alt="" width="460" height="355" loading="lazy" decoding="async">
+          <img src="assets/img/studio/studio-reception.jpg" alt="Custom Ink Luxembourg studio reception in Remerschen" width="460" height="355" loading="lazy" decoding="async">
         </a>
         <a href="https://www.instagram.com/customink_tattoostudio/" target="_blank" rel="noopener" data-track="insta_tile" aria-label="Fine line ornamental work — see Instagram">
-          <img src="assets/img/work/w07-fineline-ornament.jpg" alt="" width="457" height="798" loading="lazy" decoding="async">
+          <img src="assets/img/work/w07-fineline-ornament.jpg" alt="Fine line ornamental and floral tattoo" width="457" height="798" loading="lazy" decoding="async">
         </a>
       </div>
     </div>
@@ -1094,11 +1108,18 @@
         <h3>Good to know</h3>
         <p>Appointment requests are confirmed personally by the studio — a request is not yet an appointment.</p>
         <a class="foot-legal" href="privacy.html">Privacy policy</a>
+        <a class="foot-legal" href="terms.html">Terms &amp; conditions</a>
+        <a class="foot-legal" href="#" id="openCookieSettings">Cookie preferences</a>
       </div>
     </div>
     <div class="foot-base">
-      <p>© <span id="year">2026</span> Custom Ink Luxembourg S.à r.l. All rights reserved.</p>
-      <p class="foot-fine">Reviews quoted from the studio’s public Google profile.</p>
+      <div class="foot-base-left">
+        <p>© <span id="year">2026</span> Custom Ink Luxembourg S.à r.l. All rights reserved.</p>
+        <p class="foot-fine">Reviews quoted from the studio’s public Google profile.</p>
+      </div>
+      <div class="foot-base-right">
+        <p class="foot-credit">Made with ❤️ at Navya Tech Industry</p>
+      </div>
     </div>
   </div>
 </footer>
@@ -1118,6 +1139,10 @@
       </div>
       <button class="conc-close" id="concClose" aria-label="Close concierge">×</button>
     </header>
+    <div class="conc-ai-notice" role="note">
+      <span class="conc-ai-tag">AI Assistant</span>
+      <p>Automated guide for general studio info. Cannot confirm bookings or provide medical advice. For personal questions, reach our studio team directly.</p>
+    </div>
     <div class="conc-log" id="concLog" aria-live="polite"></div>
     <div class="conc-chips" id="concChips"></div>
     <form class="conc-input-row" id="concForm">
@@ -1154,8 +1179,48 @@
   </figure>
 </div>
 
+<!-- Cookie Consent Banner -->
+<div class="cookie-banner" id="cookieBanner" hidden role="region" aria-label="Cookie and Privacy Preferences">
+  <p class="cookie-banner-title">Privacy &amp; Cookies</p>
+  <p class="cookie-banner-text">We use essential local storage to run this website. Optional measurement (Google Analytics 4) helps us improve your experience with anonymized data. Read our <a href="privacy.html">Privacy Policy</a>.</p>
+  <div class="cookie-banner-actions">
+    <button type="button" class="cookie-btn cookie-btn-primary" id="btnAcceptAllCookies">Accept all</button>
+    <button type="button" class="cookie-btn" id="btnRejectCookies">Reject optional</button>
+    <button type="button" class="cookie-btn-subtle" id="btnCustomizeCookies">Customize</button>
+  </div>
+</div>
+
+<!-- Cookie Preferences Modal -->
+<div class="cookie-modal-backdrop" id="cookieModalBackdrop" hidden role="dialog" aria-modal="true" aria-labelledby="cookieModalTitle">
+  <div class="cookie-modal">
+    <h2 class="cookie-modal-title" id="cookieModalTitle">Cookie Preferences</h2>
+    <p class="cookie-modal-intro">Choose which technologies you allow on customink.lu. You can change your choice anytime from the website footer.</p>
+    <div class="cookie-cat">
+      <div class="cookie-cat-head">
+        <span>Essential Storage</span>
+        <span class="cookie-badge">Always Active</span>
+      </div>
+      <p class="cookie-cat-desc">Required for core functionality, such as remembering your privacy preferences and security states. No personal tracking.</p>
+    </div>
+    <div class="cookie-cat">
+      <div class="cookie-cat-head">
+        <label for="chkAnalyticsCookies" style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+          <input type="checkbox" id="chkAnalyticsCookies" style="width:16px; height:16px; accent-color:var(--fg);">
+          <span>Measurement &amp; Analytics (GA4)</span>
+        </label>
+        <span style="font-size:10px; color:var(--gray);">Optional</span>
+      </div>
+      <p class="cookie-cat-desc">Collects anonymized traffic metrics to help us understand visitor demand without storing identifying personal data.</p>
+    </div>
+    <div class="cookie-modal-footer">
+      <button type="button" class="cookie-btn" id="btnCloseCookieModal">Cancel</button>
+      <button type="button" class="cookie-btn cookie-btn-primary" id="btnSaveCookiePreferences">Save choices</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
 <script src="assets/js/fb-reviews.js" defer></script>
-<script src="assets/js/main.js?v=20" defer></script>
+<script src="assets/js/main.js?v=26" defer></script>
 </body>
 </html>
