@@ -241,8 +241,13 @@ new_css_code = '''/* ===========================================================
   height: min(760px, 70vh);
   overflow: hidden;
   position: relative;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
+  border-top: var(--bd);
+  border-bottom: var(--bd);
+  padding: 20px 0;
+  -webkit-mask: none !important;
+  mask: none !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
   scrollbar-width: none;
 }
 .fbwall-cols::-webkit-scrollbar { display: none; }

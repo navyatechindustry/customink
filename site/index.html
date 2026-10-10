@@ -37,7 +37,7 @@
 <link rel="preload" href="assets/fonts/manrope-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/fonts/fonts.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="assets/css/style.css?v=27">
+<link rel="stylesheet" href="assets/css/style.css?v=28">
 
 <!-- Structured data: LocalBusiness / TattooParlor -->
 <script type="application/ld+json">
@@ -1182,23 +1182,17 @@
 </div>
 
 <!-- Cookie Notice Popup -->
-<div class="cookie-popup-backdrop" id="cookiePopupBackdrop" role="dialog" aria-modal="true" aria-labelledby="cookiePopupTitle" hidden>
-  <div class="cookie-popup" id="cookieBanner">
-    <div class="cookie-popup-header">
-      <div style="display:flex; align-items:center; gap:8px;">
-        <span class="cookie-popup-icon" aria-hidden="true">🍪</span>
-        <h2 class="cookie-popup-title" id="cookiePopupTitle">Cookie Notice</h2>
-      </div>
-      <span class="cookie-popup-badge">Consent</span>
-    </div>
-    <p class="cookie-popup-text">We use cookies and essential storage to ensure our website functions properly and to measure performance with anonymized metrics. You can choose to accept all cookies or deny them. Read our <a href="privacy.html">Privacy Policy</a> for details.</p>
+<div class="cookie-popup-backdrop" id="cookiePopupBackdrop" hidden role="dialog" aria-modal="true" aria-labelledby="cookiePopupTitle">
+  <div class="cookie-popup">
+    <div class="cookie-popup-badge">Cookie Notice</div>
+    <h2 class="cookie-popup-title" id="cookiePopupTitle">We Value Your Privacy</h2>
+    <p class="cookie-popup-text">We use essential storage to make our website work. With your choice, we also use anonymized measurement tools to enhance your experience. Read our <a href="privacy.html">Privacy Policy</a>.</p>
     <div class="cookie-popup-actions">
-      <button type="button" class="cookie-btn cookie-btn-primary" id="btnAcceptAllCookies">Accept all cookies</button>
-      <button type="button" class="cookie-btn" id="btnRejectCookies">Deny</button>
+      <button type="button" class="cookie-popup-btn cookie-popup-btn-accept" id="btnAcceptAllCookies">Accept all cookies</button>
+      <button type="button" class="cookie-popup-btn cookie-popup-btn-deny" id="btnRejectCookies">Deny</button>
     </div>
   </div>
 </div>
-
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
 <script type="module" src="assets/js/fb-reviews.js"></script>

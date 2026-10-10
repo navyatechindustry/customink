@@ -165,7 +165,7 @@ export const TestimonialsSection = () => {
   return (
     <section 
       aria-labelledby="testimonials-heading"
-      className="bg-transparent py-24 relative overflow-hidden"
+      className="bg-transparent py-24 relative overflow-hidden border-t border-b border-black"
     >
       <motion.div 
         initial={{ opacity: 0, y: 50, rotate: -2 }}
@@ -180,7 +180,7 @@ export const TestimonialsSection = () => {
       >
         <div className="flex flex-col items-center justify-center max-w-[580px] mx-auto mb-16 text-center">
           <div className="flex justify-center">
-            <div className="border border-neutral-300 dark:border-neutral-700 py-1 px-4 rounded-full text-xs font-semibold tracking-wide uppercase text-neutral-700 dark:text-neutral-300 bg-neutral-100/70 dark:bg-neutral-800/70 transition-colors">
+            <div className="border border-black py-1 px-4 rounded-full text-xs font-semibold tracking-wide uppercase text-neutral-700 dark:text-neutral-300 bg-neutral-100/70 dark:bg-neutral-800/70 transition-colors">
               Feedback Wall
             </div>
           </div>
@@ -194,7 +194,7 @@ export const TestimonialsSection = () => {
         </div>
 
         <div 
-          className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] max-h-[740px] overflow-hidden"
+          className="flex justify-center gap-6 mt-10 max-h-[740px] overflow-hidden border-t border-b border-black py-4"
           role="region"
           aria-label="Scrolling Testimonials"
         >

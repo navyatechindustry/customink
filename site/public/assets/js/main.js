@@ -10,13 +10,18 @@
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
-  /* ---------------- consent & analytics management (GDPR & ePrivacy) ---------------- */
-  var CONSENT_KEY = 'ci_cookie_consent_v1';
+  /* ---------------- cookie notice & consent management (session-based) ---------------- */
+  var CONSENT_SESSION_KEY = 'ci_cookie_consent_session';
   var GA_MEASUREMENT_ID = window.CI_GA_MEASUREMENT_ID || ''; // Configurable measurement ID (e.g. 'G-XXXXXXXXXX')
+
+  // Clear legacy persistent consent so each new session prompts the user
+  try {
+    localStorage.removeItem('ci_cookie_consent_v1');
+  } catch (e) {}
 
   function getStoredConsent() {
     try {
-      var raw = localStorage.getItem(CONSENT_KEY);
+      var raw = sessionStorage.getItem(CONSENT_SESSION_KEY);
       return raw ? JSON.parse(raw) : null;
     } catch (e) {
       return null;
@@ -28,10 +33,10 @@
       necessary: true,
       analytics: !!analyticsAllowed,
       timestamp: new Date().toISOString(),
-      version: '1.0'
+      choice: analyticsAllowed ? 'accept' : 'deny'
     };
     try {
-      localStorage.setItem(CONSENT_KEY, JSON.stringify(state));
+      sessionStorage.setItem(CONSENT_SESSION_KEY, JSON.stringify(state));
     } catch (e) {}
     applyConsent(state);
     return state;
@@ -58,11 +63,9 @@
   function track(event, data) {
     var c = getStoredConsent();
     if (!c || !c.analytics) {
-      // Prior consent required: suppress tracking if analytics consent is not granted
       return;
     }
     window.dataLayer = window.dataLayer || [];
-    // Sanitize payload: never forward PII or sensitive form values
     var cleanData = Object.assign({ event: event }, data || {});
     window.dataLayer.push(cleanData);
     if (window.console && console.debug) console.debug('[track]', event, cleanData);
@@ -73,71 +76,68 @@
     if (t) track(t.getAttribute('data-track'), { label: (t.textContent || '').trim().slice(0, 60) });
   });
 
-  // Cookie notice popup controller
+  // Cookie notice popup controller (session-based)
   (function initConsentUI() {
-    var backdrop = $('#cookiePopupBackdrop');
-    var banner = $('#cookieBanner') || backdrop;
-    var current = getStoredConsent();
+    var popupBackdrop = $('#cookiePopupBackdrop');
 
-    if (current) {
-      applyConsent(current);
+    // Dynamically inject if not present on page (e.g. privacy or terms pages)
+    if (!popupBackdrop) {
+      popupBackdrop = document.createElement('div');
+      popupBackdrop.id = 'cookiePopupBackdrop';
+      popupBackdrop.className = 'cookie-popup-backdrop';
+      popupBackdrop.hidden = true;
+      popupBackdrop.setAttribute('role', 'dialog');
+      popupBackdrop.setAttribute('aria-modal', 'true');
+      popupBackdrop.setAttribute('aria-labelledby', 'cookiePopupTitle');
+      popupBackdrop.innerHTML =
+        '<div class="cookie-popup">' +
+          '<div class="cookie-popup-badge">Cookie Notice</div>' +
+          '<h2 class="cookie-popup-title" id="cookiePopupTitle">We Value Your Privacy</h2>' +
+          '<p class="cookie-popup-text">We use essential storage to make our website work. With your choice, we also use anonymized measurement tools to enhance your experience. Read our <a href="privacy.html">Privacy Policy</a>.</p>' +
+          '<div class="cookie-popup-actions">' +
+            '<button type="button" class="cookie-popup-btn cookie-popup-btn-accept" id="btnAcceptAllCookies">Accept all cookies</button>' +
+            '<button type="button" class="cookie-popup-btn cookie-popup-btn-deny" id="btnRejectCookies">Deny</button>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(popupBackdrop);
     }
 
     function showPopup() {
-      var target = backdrop || banner;
-      if (!target) return;
-      target.hidden = false;
-      target.style.display = 'flex';
-      target.classList.remove('is-closing');
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          target.classList.add('is-open');
-          var firstBtn = target.querySelector('#btnAcceptAllCookies, button');
-          if (firstBtn) try { firstBtn.focus(); } catch (e) {}
-        });
-      });
+      if (popupBackdrop) {
+        popupBackdrop.hidden = false;
+        popupBackdrop.style.display = 'flex';
+      }
     }
 
     function removePopup() {
-      var target = backdrop || banner;
-      if (!target) return;
-      target.classList.remove('is-open');
-      target.classList.add('is-closing');
-      setTimeout(function () {
-        target.hidden = true;
-        target.style.display = 'none';
-        target.classList.remove('is-closing');
-      }, 220);
+      if (popupBackdrop) {
+        popupBackdrop.hidden = true;
+        popupBackdrop.style.display = 'none';
+      }
     }
 
-    // Trigger popup to open up when user opens the website
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function () {
-        setTimeout(showPopup, 150);
-      });
+    var current = getStoredConsent();
+    if (current) {
+      applyConsent(current);
+      removePopup();
     } else {
-      setTimeout(showPopup, 150);
+      showPopup();
     }
 
-    var btnAccept = $('#btnAcceptAllCookies');
-    if (btnAccept) {
-      btnAccept.addEventListener('click', function (e) {
-        e.preventDefault();
+    // Handle button clicks inside the popup
+    popupBackdrop.addEventListener('click', function (e) {
+      var acceptBtn = e.target.closest('#btnAcceptAllCookies');
+      var denyBtn = e.target.closest('#btnRejectCookies');
+      if (acceptBtn) {
         saveConsent(true);
         removePopup();
-      });
-    }
-
-    var btnReject = $('#btnRejectCookies');
-    if (btnReject) {
-      btnReject.addEventListener('click', function (e) {
-        e.preventDefault();
+      } else if (denyBtn) {
         saveConsent(false);
         removePopup();
-      });
-    }
+      }
+    });
 
-    // Allow re-opening via footer link
+    // Reopen popup if user clicks on Cookie Preferences in footer
     document.addEventListener('click', function (e) {
       var trigger = e.target.closest('#openCookieSettings, [data-open-cookie-settings]');
       if (trigger) {
@@ -145,15 +145,6 @@
         showPopup();
       }
     });
-
-    if (backdrop) {
-      backdrop.addEventListener('click', function (e) {
-        if (e.target === backdrop) removePopup();
-      });
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && !backdrop.hidden) removePopup();
-      });
-    }
   })();
 
   /* ---------------- sticky nav ---------------- */
@@ -858,139 +849,7 @@
     });
   })();
 
-/* ---------------- feedback wall builder ---------------- */
-  (function () {
-    var data = window.FB_REVIEWS || [];
-    var container = document.getElementById('fbwallCols');
-    if (!container || !data.length) return;
 
-    /* Development-time validation */
-    if (window.console && console.assert) {
-      console.assert(
-        data.length === 377,
-        'Custom Ink review dataset should contain 377 reviews (found ' + data.length + ')'
-      );
-    }
-
-    function esc(x) {
-      return String(x)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    }
-
-    function initials(n) {
-      var parts = (n || '').trim().split(/\s+/);
-      var a = (parts[0] || '').charAt(0);
-      var b = parts.length > 1 ? parts[parts.length - 1].charAt(0) : '';
-      return ((a + b) || 'CI').toUpperCase();
-    }
-
-    function createCard(r, isDup) {
-      var card = document.createElement('article');
-      card.className = 'review-card fb-card' + (r.x ? '' : ' fb-card--rating');
-      if (isDup) {
-        card.setAttribute('aria-hidden', 'true');
-      }
-
-      var stars = '<span class="fb-stars-row" aria-label="5 stars" title="5 stars on Google">★★★★★</span>';
-      var textHtml = r.x
-        ? '<blockquote class="fb-text">“' + esc(r.x) + '”</blockquote>'
-        : '<p class="fb-text fb-text--empty">Verified 5-star studio experience</p>';
-
-      card.innerHTML =
-        '<div class="fb-card-inner">' +
-          '<header class="fb-top-row">' +
-            stars +
-            '<span class="fb-source-tag">Google Review</span>' +
-          '</header>' +
-          textHtml +
-          '<footer class="fb-footer">' +
-            '<div class="fb-ava" aria-hidden="true"><span>' + esc(initials(r.n)) + '</span></div>' +
-            '<div class="fb-who">' +
-              '<cite>' + esc(r.n) + '</cite>' +
-              (r.t ? '<span>' + esc(r.t) + '</span>' : '') +
-            '</div>' +
-          '</footer>' +
-        '</div>';
-      return card;
-    }
-
-    var currentCols = -1;
-
-    function getTargetColCount() {
-      var w = window.innerWidth;
-      if (w > 960) return 3;
-      if (w > 600) return 2;
-      return 1;
-    }
-
-    function renderWall() {
-      var cols = getTargetColCount();
-      if (cols === currentCols) return;
-      currentCols = cols;
-
-      container.innerHTML = '';
-
-      // All three columns move continuously BOTTOM -> TOP (upward) at a gentle, readable pace
-      // Desktop (3 cols): Column 1 = 300s (~5min), Column 2 = 360s (~6min), Column 3 = 330s (~5.5min)
-      // Tablet (2 cols): Column 1 = 310s, Column 2 = 370s
-      // Mobile (1 col): Column 1 = 340s
-      var durations = [];
-      if (cols === 3) {
-        durations = [300, 360, 330];
-      } else if (cols === 2) {
-        durations = [310, 370];
-      } else {
-        durations = [340];
-      }
-
-      for (var c = 0; c < cols; c++) {
-        var col = document.createElement('div');
-        col.className = 'review-column fb-col fb-col-' + (c + 1);
-
-        var track = document.createElement('div');
-        track.className = 'review-track fb-track fb-dir-up';
-        track.style.animationDuration = durations[c] + 's';
-        track.style.setProperty('--dur', durations[c] + 's');
-
-        // Review Group A (primary sequence)
-        var groupA = document.createElement('div');
-        groupA.className = 'review-group';
-
-        for (var i = 0; i < data.length; i++) {
-          if (i % cols === c) {
-            groupA.appendChild(createCard(data[i], false));
-          }
-        }
-
-        // Review Group B (identical duplicate sequence for seamless -50% loop)
-        var groupB = document.createElement('div');
-        groupB.className = 'review-group';
-        groupB.setAttribute('aria-hidden', 'true');
-
-        for (var j = 0; j < data.length; j++) {
-          if (j % cols === c) {
-            groupB.appendChild(createCard(data[j], true));
-          }
-        }
-
-        track.appendChild(groupA);
-        track.appendChild(groupB);
-        col.appendChild(track);
-        container.appendChild(col);
-      }
-    }
-
-    renderWall();
-
-    var resizeTimer = null;
-    window.addEventListener('resize', function () {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(renderWall, 150);
-    });
-  })();
 
 /* ---------------- footer year ---------------- */
   var y = $('#year'); if (y) y.textContent = new Date().getFullYear();

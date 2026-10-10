@@ -10,13 +10,18 @@
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
-  /* ---------------- consent & analytics management (GDPR & ePrivacy) ---------------- */
-  var CONSENT_KEY = 'ci_cookie_consent_v1';
+  /* ---------------- cookie notice & consent management (session-based) ---------------- */
+  var CONSENT_SESSION_KEY = 'ci_cookie_consent_session';
   var GA_MEASUREMENT_ID = window.CI_GA_MEASUREMENT_ID || ''; // Configurable measurement ID (e.g. 'G-XXXXXXXXXX')
+
+  // Clear legacy persistent consent so each new session prompts the user
+  try {
+    localStorage.removeItem('ci_cookie_consent_v1');
+  } catch (e) {}
 
   function getStoredConsent() {
     try {
-      var raw = localStorage.getItem(CONSENT_KEY);
+      var raw = sessionStorage.getItem(CONSENT_SESSION_KEY);
       return raw ? JSON.parse(raw) : null;
     } catch (e) {
       return null;
@@ -28,10 +33,10 @@
       necessary: true,
       analytics: !!analyticsAllowed,
       timestamp: new Date().toISOString(),
-      version: '1.0'
+      choice: analyticsAllowed ? 'accept' : 'deny'
     };
     try {
-      localStorage.setItem(CONSENT_KEY, JSON.stringify(state));
+      sessionStorage.setItem(CONSENT_SESSION_KEY, JSON.stringify(state));
     } catch (e) {}
     applyConsent(state);
     return state;
@@ -58,11 +63,9 @@
   function track(event, data) {
     var c = getStoredConsent();
     if (!c || !c.analytics) {
-      // Prior consent required: suppress tracking if analytics consent is not granted
       return;
     }
     window.dataLayer = window.dataLayer || [];
-    // Sanitize payload: never forward PII or sensitive form values
     var cleanData = Object.assign({ event: event }, data || {});
     window.dataLayer.push(cleanData);
     if (window.console && console.debug) console.debug('[track]', event, cleanData);
@@ -73,71 +76,68 @@
     if (t) track(t.getAttribute('data-track'), { label: (t.textContent || '').trim().slice(0, 60) });
   });
 
-  // Cookie notice popup controller
+  // Cookie notice popup controller (session-based)
   (function initConsentUI() {
-    var backdrop = $('#cookiePopupBackdrop');
-    var banner = $('#cookieBanner') || backdrop;
-    var current = getStoredConsent();
+    var popupBackdrop = $('#cookiePopupBackdrop');
 
-    if (current) {
-      applyConsent(current);
+    // Dynamically inject if not present on page (e.g. privacy or terms pages)
+    if (!popupBackdrop) {
+      popupBackdrop = document.createElement('div');
+      popupBackdrop.id = 'cookiePopupBackdrop';
+      popupBackdrop.className = 'cookie-popup-backdrop';
+      popupBackdrop.hidden = true;
+      popupBackdrop.setAttribute('role', 'dialog');
+      popupBackdrop.setAttribute('aria-modal', 'true');
+      popupBackdrop.setAttribute('aria-labelledby', 'cookiePopupTitle');
+      popupBackdrop.innerHTML =
+        '<div class="cookie-popup">' +
+          '<div class="cookie-popup-badge">Cookie Notice</div>' +
+          '<h2 class="cookie-popup-title" id="cookiePopupTitle">We Value Your Privacy</h2>' +
+          '<p class="cookie-popup-text">We use essential storage to make our website work. With your choice, we also use anonymized measurement tools to enhance your experience. Read our <a href="privacy.html">Privacy Policy</a>.</p>' +
+          '<div class="cookie-popup-actions">' +
+            '<button type="button" class="cookie-popup-btn cookie-popup-btn-accept" id="btnAcceptAllCookies">Accept all cookies</button>' +
+            '<button type="button" class="cookie-popup-btn cookie-popup-btn-deny" id="btnRejectCookies">Deny</button>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(popupBackdrop);
     }
 
     function showPopup() {
-      var target = backdrop || banner;
-      if (!target) return;
-      target.hidden = false;
-      target.style.display = 'flex';
-      target.classList.remove('is-closing');
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          target.classList.add('is-open');
-          var firstBtn = target.querySelector('#btnAcceptAllCookies, button');
-          if (firstBtn) try { firstBtn.focus(); } catch (e) {}
-        });
-      });
+      if (popupBackdrop) {
+        popupBackdrop.hidden = false;
+        popupBackdrop.style.display = 'flex';
+      }
     }
 
     function removePopup() {
-      var target = backdrop || banner;
-      if (!target) return;
-      target.classList.remove('is-open');
-      target.classList.add('is-closing');
-      setTimeout(function () {
-        target.hidden = true;
-        target.style.display = 'none';
-        target.classList.remove('is-closing');
-      }, 220);
+      if (popupBackdrop) {
+        popupBackdrop.hidden = true;
+        popupBackdrop.style.display = 'none';
+      }
     }
 
-    // Trigger popup to open up when user opens the website
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function () {
-        setTimeout(showPopup, 150);
-      });
+    var current = getStoredConsent();
+    if (current) {
+      applyConsent(current);
+      removePopup();
     } else {
-      setTimeout(showPopup, 150);
+      showPopup();
     }
 
-    var btnAccept = $('#btnAcceptAllCookies');
-    if (btnAccept) {
-      btnAccept.addEventListener('click', function (e) {
-        e.preventDefault();
+    // Handle button clicks inside the popup
+    popupBackdrop.addEventListener('click', function (e) {
+      var acceptBtn = e.target.closest('#btnAcceptAllCookies');
+      var denyBtn = e.target.closest('#btnRejectCookies');
+      if (acceptBtn) {
         saveConsent(true);
         removePopup();
-      });
-    }
-
-    var btnReject = $('#btnRejectCookies');
-    if (btnReject) {
-      btnReject.addEventListener('click', function (e) {
-        e.preventDefault();
+      } else if (denyBtn) {
         saveConsent(false);
         removePopup();
-      });
-    }
+      }
+    });
 
-    // Allow re-opening via footer link
+    // Reopen popup if user clicks on Cookie Preferences in footer
     document.addEventListener('click', function (e) {
       var trigger = e.target.closest('#openCookieSettings, [data-open-cookie-settings]');
       if (trigger) {
@@ -145,15 +145,6 @@
         showPopup();
       }
     });
-
-    if (backdrop) {
-      backdrop.addEventListener('click', function (e) {
-        if (e.target === backdrop) removePopup();
-      });
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && !backdrop.hidden) removePopup();
-      });
-    }
   })();
 
   /* ---------------- sticky nav ---------------- */

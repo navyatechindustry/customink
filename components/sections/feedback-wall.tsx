@@ -20,7 +20,7 @@ export const FeedbackWall: React.FC<FeedbackWallProps> = ({ className = "" }) =>
     <section
       id="feedback-wall"
       aria-label="Feedback wall — continuous client reviews"
-      className={`relative w-full py-20 bg-[#0E0E0E] text-[#F5F2EA] border-t border-white/[0.08] ${className}`}
+      className={`relative w-full py-20 bg-[#0E0E0E] text-[#F5F2EA] border-t border-black ${className}`}
     >
       <div className="max-w-[1340px] mx-auto px-6 lg:px-10">
         {/* Section Header */}
@@ -40,7 +40,7 @@ export const FeedbackWall: React.FC<FeedbackWallProps> = ({ className = "" }) =>
           </div>
 
           {/* Refined Trust Badge */}
-          <div className="flex items-center gap-4 border border-white/[0.12] bg-[#161616] px-5 py-3.5 rounded-lg shadow-lg self-start lg:self-auto">
+          <div className="flex items-center gap-4 border border-black bg-[#161616] px-5 py-3.5 rounded-lg shadow-lg self-start lg:self-auto">
             <span className="font-mono text-2xl font-bold text-[#F5F2EA] leading-none">
               4.9
             </span>
@@ -57,14 +57,12 @@ export const FeedbackWall: React.FC<FeedbackWallProps> = ({ className = "" }) =>
 
         {/* Layer 1 — Fixed Review Viewport (overflow: hidden, no manual scroll, no scrollbars) */}
         <div
-          className="review-wall-viewport relative w-full overflow-hidden pointer-events-none select-none"
+          className="review-wall-viewport relative w-full overflow-hidden pointer-events-none select-none border-t border-b border-black py-5"
           style={{
             height: "min(760px, 70vh)",
             overflow: "hidden",
-            maskImage:
-              "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
-            WebkitMaskImage:
-              "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
+            maskImage: "none",
+            WebkitMaskImage: "none",
           }}
         >
           {/* Desktop Layout: 3 Columns — ALL THREE MOVE UPWARD (52s, 61s, 57s) */}
