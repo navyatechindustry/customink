@@ -37,7 +37,7 @@
 <link rel="preload" href="assets/fonts/manrope-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/fonts/fonts.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="assets/css/style.css?v=26">
+<link rel="stylesheet" href="assets/css/style.css?v=27">
 
 <!-- Structured data: LocalBusiness / TattooParlor -->
 <script type="application/ld+json">
@@ -194,7 +194,7 @@
   </nav>
   <div class="mm-foot">
     <a href="tel:+35226550766">+352 26 55 07 66</a>
-    <a href="mailto:info@customink.lu">info@customink.lu</a>
+    <a href="mailto:info@customink.lu?body=Hi%2C%20i%20would%20like%20to%20receive%20a%20call%20to%20talk%20more%20about%20the%20services">info@customink.lu</a>
   </div>
 </div>
 
@@ -833,7 +833,7 @@
           <a class="btn btn-ghost" href="tel:+35226550766" data-track="phone_call">+352 26 55 07 66</a>
         </div>
         <div class="visit-contact reveal">
-          <a href="mailto:info@customink.lu" data-track="email">info@customink.lu</a>
+          <a href="mailto:info@customink.lu?body=Hi%2C%20i%20would%20like%20to%20receive%20a%20call%20to%20talk%20more%20about%20the%20services" data-track="email">info@customink.lu</a>
           <a href="https://www.instagram.com/customink_tattoostudio/" target="_blank" rel="noopener" data-track="visit_instagram">@customink_tattoostudio</a>
         </div>
       </div>
@@ -867,7 +867,7 @@
             <span class="direct-l">Call the studio</span>
             <span class="direct-v">+352 26 55 07 66</span>
           </a>
-          <a class="direct" href="mailto:info@customink.lu?subject=Appointment%20request" data-track="email">
+          <a class="direct" href="mailto:info@customink.lu?subject=Appointment%20request&amp;body=Hi%2C%20i%20would%20like%20to%20receive%20a%20call%20to%20talk%20more%20about%20the%20services" data-track="email">
             <span class="direct-l">Email</span>
             <span class="direct-v">info@customink.lu</span>
           </a>
@@ -961,7 +961,7 @@
             <h3>Your request is ready to send ✳</h3>
             <p>Your email app should have opened with everything filled in. Press send there — our team will review your request and get back to you with availability and details.</p>
             <p class="frm-success-alt">Note: Submitting this form prepares an enquiry draft. It does not confirm a booking or guarantee artist availability until confirmed by the studio.</p>
-            <p class="frm-success-alt">No email app? Write directly to <a href="mailto:info@customink.lu">info@customink.lu</a>
+            <p class="frm-success-alt">No email app? Write directly to <a href="mailto:info@customink.lu?body=Hi%2C%20i%20would%20like%20to%20receive%20a%20call%20to%20talk%20more%20about%20the%20services">info@customink.lu</a>
             or call <a href="tel:+35226550766">+352 26 55 07 66</a>.</p>
           </div>
         </form>
@@ -980,7 +980,7 @@
     <div class="accordion" id="accordion">
       <details class="acc reveal">
         <summary><span>How do I book an appointment?</span><span class="acc-ico" aria-hidden="true"></span></summary>
-        <div class="acc-body"><p>Send a request through the form above, call <a href="tel:+35226550766">+352 26 55 07 66</a>, email <a href="mailto:info@customink.lu">info@customink.lu</a>, or DM on <a href="https://www.instagram.com/customink_tattoostudio/" target="_blank" rel="noopener">Instagram</a>. Every request is confirmed personally — an appointment is only fixed once the studio confirms it with you.</p></div>
+        <div class="acc-body"><p>Send a request through the form above, call <a href="tel:+35226550766">+352 26 55 07 66</a>, email <a href="mailto:info@customink.lu?body=Hi%2C%20i%20would%20like%20to%20receive%20a%20call%20to%20talk%20more%20about%20the%20services">info@customink.lu</a>, or DM on <a href="https://www.instagram.com/customink_tattoostudio/" target="_blank" rel="noopener">Instagram</a>. Every request is confirmed personally — an appointment is only fixed once the studio confirms it with you.</p></div>
       </details>
       <details class="acc reveal">
         <summary><span>Do I need a consultation first?</span><span class="acc-ico" aria-hidden="true"></span></summary>
@@ -1103,7 +1103,7 @@
           103, Waistrooss<br>L-5440 Remerschen<br>Luxembourg
         </address>
         <a href="tel:+35226550766">+352 26 55 07 66</a>
-        <a href="mailto:info@customink.lu">info@customink.lu</a>
+        <a href="mailto:info@customink.lu?body=Hi%2C%20i%20would%20like%20to%20receive%20a%20call%20to%20talk%20more%20about%20the%20services">info@customink.lu</a>
         <p class="foot-hours">Tue – Sun · 10:00 – 19:00<br><span>Monday closed</span></p>
       </div>
       <div class="foot-col">
@@ -1181,48 +1181,27 @@
   </figure>
 </div>
 
-<!-- Cookie Consent Banner -->
-<div class="cookie-banner" id="cookieBanner" hidden role="region" aria-label="Cookie and Privacy Preferences">
-  <p class="cookie-banner-title">Privacy &amp; Cookies</p>
-  <p class="cookie-banner-text">We use essential local storage to run this website. Optional measurement (Google Analytics 4) helps us improve your experience with anonymized data. Read our <a href="privacy.html">Privacy Policy</a>.</p>
-  <div class="cookie-banner-actions">
-    <button type="button" class="cookie-btn cookie-btn-primary" id="btnAcceptAllCookies">Accept all</button>
-    <button type="button" class="cookie-btn" id="btnRejectCookies">Reject optional</button>
-    <button type="button" class="cookie-btn-subtle" id="btnCustomizeCookies">Customize</button>
+<!-- Cookie Notice Popup -->
+<div class="cookie-popup-backdrop" id="cookiePopupBackdrop" role="dialog" aria-modal="true" aria-labelledby="cookiePopupTitle" hidden>
+  <div class="cookie-popup" id="cookieBanner">
+    <div class="cookie-popup-header">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span class="cookie-popup-icon" aria-hidden="true">🍪</span>
+        <h2 class="cookie-popup-title" id="cookiePopupTitle">Cookie Notice</h2>
+      </div>
+      <span class="cookie-popup-badge">Consent</span>
+    </div>
+    <p class="cookie-popup-text">We use cookies and essential storage to ensure our website functions properly and to measure performance with anonymized metrics. You can choose to accept all cookies or deny them. Read our <a href="privacy.html">Privacy Policy</a> for details.</p>
+    <div class="cookie-popup-actions">
+      <button type="button" class="cookie-btn cookie-btn-primary" id="btnAcceptAllCookies">Accept all cookies</button>
+      <button type="button" class="cookie-btn" id="btnRejectCookies">Deny</button>
+    </div>
   </div>
 </div>
 
-<!-- Cookie Preferences Modal -->
-<div class="cookie-modal-backdrop" id="cookieModalBackdrop" hidden role="dialog" aria-modal="true" aria-labelledby="cookieModalTitle">
-  <div class="cookie-modal">
-    <h2 class="cookie-modal-title" id="cookieModalTitle">Cookie Preferences</h2>
-    <p class="cookie-modal-intro">Choose which technologies you allow on customink.lu. You can change your choice anytime from the website footer.</p>
-    <div class="cookie-cat">
-      <div class="cookie-cat-head">
-        <span>Essential Storage</span>
-        <span class="cookie-badge">Always Active</span>
-      </div>
-      <p class="cookie-cat-desc">Required for core functionality, such as remembering your privacy preferences and security states. No personal tracking.</p>
-    </div>
-    <div class="cookie-cat">
-      <div class="cookie-cat-head">
-        <label for="chkAnalyticsCookies" style="cursor:pointer; display:flex; align-items:center; gap:8px;">
-          <input type="checkbox" id="chkAnalyticsCookies" style="width:16px; height:16px; accent-color:var(--fg);">
-          <span>Measurement &amp; Analytics (GA4)</span>
-        </label>
-        <span style="font-size:10px; color:var(--gray);">Optional</span>
-      </div>
-      <p class="cookie-cat-desc">Collects anonymized traffic metrics to help us understand visitor demand without storing identifying personal data.</p>
-    </div>
-    <div class="cookie-modal-footer">
-      <button type="button" class="cookie-btn" id="btnCloseCookieModal">Cancel</button>
-      <button type="button" class="cookie-btn cookie-btn-primary" id="btnSaveCookiePreferences">Save choices</button>
-    </div>
-  </div>
-</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
-<script src="assets/js/fb-reviews.js" defer></script>
-<script src="assets/js/main.js?v=26" defer></script>
+<script type="module" src="assets/js/fb-reviews.js"></script>
+<script type="module" src="assets/js/main.js"></script>
 </body>
 </html>

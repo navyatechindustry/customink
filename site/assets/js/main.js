@@ -73,131 +73,162 @@
     if (t) track(t.getAttribute('data-track'), { label: (t.textContent || '').trim().slice(0, 60) });
   });
 
-  // Cookie banner & modal controllers
+  // Cookie notice popup controller
   (function initConsentUI() {
-    var banner = $('#cookieBanner');
-    var modalBackdrop = $('#cookieModalBackdrop');
-    var chkAnalytics = $('#chkAnalyticsCookies');
+    var backdrop = $('#cookiePopupBackdrop');
+    var banner = $('#cookieBanner') || backdrop;
     var current = getStoredConsent();
 
     if (current) {
       applyConsent(current);
-    } else if (banner) {
-      banner.hidden = false;
+    }
+
+    function showPopup() {
+      var target = backdrop || banner;
+      if (!target) return;
+      target.hidden = false;
+      target.style.display = 'flex';
+      target.classList.remove('is-closing');
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          target.classList.add('is-open');
+          var firstBtn = target.querySelector('#btnAcceptAllCookies, button');
+          if (firstBtn) try { firstBtn.focus(); } catch (e) {}
+        });
+      });
+    }
+
+    function removePopup() {
+      var target = backdrop || banner;
+      if (!target) return;
+      target.classList.remove('is-open');
+      target.classList.add('is-closing');
+      setTimeout(function () {
+        target.hidden = true;
+        target.style.display = 'none';
+        target.classList.remove('is-closing');
+      }, 220);
+    }
+
+    // Trigger popup to open up when user opens the website
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () {
+        setTimeout(showPopup, 150);
+      });
+    } else {
+      setTimeout(showPopup, 150);
     }
 
     var btnAccept = $('#btnAcceptAllCookies');
     if (btnAccept) {
-      btnAccept.addEventListener('click', function () {
+      btnAccept.addEventListener('click', function (e) {
+        e.preventDefault();
         saveConsent(true);
-        if (banner) banner.hidden = true;
+        removePopup();
       });
     }
 
     var btnReject = $('#btnRejectCookies');
     if (btnReject) {
-      btnReject.addEventListener('click', function () {
+      btnReject.addEventListener('click', function (e) {
+        e.preventDefault();
         saveConsent(false);
-        if (banner) banner.hidden = true;
+        removePopup();
       });
     }
 
-    var btnCustomize = $('#btnCustomizeCookies');
-    if (btnCustomize) {
-      btnCustomize.addEventListener('click', function () {
-        if (banner) banner.hidden = true;
-        openCookieModal();
-      });
-    }
-
-    function openCookieModal() {
-      if (!modalBackdrop) return;
-      var c = getStoredConsent();
-      if (chkAnalytics) chkAnalytics.checked = !!(c && c.analytics);
-      modalBackdrop.hidden = false;
-      var firstBtn = modalBackdrop.querySelector('button');
-      if (firstBtn) try { firstBtn.focus(); } catch (e) {}
-    }
-
-    function closeCookieModal() {
-      if (modalBackdrop) modalBackdrop.hidden = true;
-    }
-
-    var btnCloseModal = $('#btnCloseCookieModal');
-    if (btnCloseModal) btnCloseModal.addEventListener('click', closeCookieModal);
-
-    var btnSavePrefs = $('#btnSaveCookiePreferences');
-    if (btnSavePrefs) {
-      btnSavePrefs.addEventListener('click', function () {
-        var allow = chkAnalytics ? chkAnalytics.checked : false;
-        saveConsent(allow);
-        closeCookieModal();
-        if (banner) banner.hidden = true;
-      });
-    }
-
+    // Allow re-opening via footer link
     document.addEventListener('click', function (e) {
       var trigger = e.target.closest('#openCookieSettings, [data-open-cookie-settings]');
       if (trigger) {
         e.preventDefault();
-        openCookieModal();
+        showPopup();
       }
     });
 
-    if (modalBackdrop) {
-      modalBackdrop.addEventListener('click', function (e) {
-        if (e.target === modalBackdrop) closeCookieModal();
+    if (backdrop) {
+      backdrop.addEventListener('click', function (e) {
+        if (e.target === backdrop) removePopup();
       });
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && !modalBackdrop.hidden) closeCookieModal();
+        if (e.key === 'Escape' && !backdrop.hidden) removePopup();
       });
     }
   })();
 
   /* ---------------- sticky nav ---------------- */
   var nav = $('#nav');
-  function onScrollNav() { nav.classList.toggle('is-solid', window.scrollY > 40); }
-  onScrollNav();
-  window.addEventListener('scroll', onScrollNav, { passive: true });
+  if (nav) {
+    var onScrollNav = function () { nav.classList.toggle('is-solid', window.scrollY > 40); };
+    onScrollNav();
+    window.addEventListener('scroll', onScrollNav, { passive: true });
+  }
 
   /* ---------------- mobile menu ---------------- */
   var burger = $('#burger'), menu = $('#mobileMenu');
   var mainEl = $('#main'), footEl = $('.footer');
+  var menuTimer = null;
+
   function closeMenu(shouldFocusBurger) {
-    if (!menu.classList.contains('is-open')) return;
-    menu.classList.remove('is-open');
+    if (!burger || !menu) return;
+    clearTimeout(menuTimer);
     burger.classList.remove('is-open');
     burger.setAttribute('aria-expanded', 'false');
+    menu.classList.remove('is-open');
     document.body.style.overflow = '';
     document.body.classList.remove('menu-open');
     if (mainEl) mainEl.removeAttribute('aria-hidden');
     if (footEl) footEl.removeAttribute('aria-hidden');
-    setTimeout(function () { menu.hidden = true; }, 420);
+    menuTimer = setTimeout(function () {
+      if (!burger.classList.contains('is-open')) {
+        menu.hidden = true;
+      }
+    }, 350);
     if (shouldFocusBurger !== false) {
       try { burger.focus(); } catch (e) {}
     }
   }
-  burger.addEventListener('click', function () {
-    var open = burger.classList.contains('is-open');
-    if (open) { closeMenu(); return; }
+
+  function openMenu() {
+    if (!burger || !menu) return;
+    clearTimeout(menuTimer);
     menu.hidden = false;
-    requestAnimationFrame(function () { requestAnimationFrame(function () { menu.classList.add('is-open'); }); });
+    // Force layout flush so CSS transition starts immediately
+    void menu.offsetHeight;
     burger.classList.add('is-open');
     burger.setAttribute('aria-expanded', 'true');
+    menu.classList.add('is-open');
     document.body.style.overflow = 'hidden';
     document.body.classList.add('menu-open');
     if (mainEl) mainEl.setAttribute('aria-hidden', 'true');
     if (footEl) footEl.setAttribute('aria-hidden', 'true');
     $$('.mobile-menu nav a, .mobile-menu .mm-foot a', menu).forEach(function (a, i) { a.style.setProperty('--i', i); });
-  });
-  $$('#mobileMenu a').forEach(function (a) {
-    a.addEventListener('click', function () { closeMenu(false); });
-  });
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && menu.classList.contains('is-open')) {
-      closeMenu(true);
-    }
-  });
+  }
+
+  if (burger && menu) {
+    burger.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var isOpen = burger.classList.contains('is-open');
+      if (isOpen) {
+        closeMenu(true);
+      } else {
+        openMenu();
+      }
+    });
+
+    $$('#mobileMenu a', menu).forEach(function (a) {
+      a.addEventListener('click', function () {
+        closeMenu(false);
+      });
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && burger.classList.contains('is-open')) {
+        closeMenu(true);
+      }
+    });
+  }
 
 
   /* ---------------- scroll reveals ---------------- */
@@ -276,18 +307,21 @@
   function stepLb(d) { lbIdx = (lbIdx + d + lbList.length) % lbList.length; renderLb(); }
 
   items.forEach(function (it) {
-    $('.g-media', it).addEventListener('click', function () { openLb(it); });
+    var m = $('.g-media', it);
+    if (m) m.addEventListener('click', function () { openLb(it); });
   });
-  $('#lbClose').addEventListener('click', closeLb);
-  $('#lbPrev').addEventListener('click', function () { stepLb(-1); });
-  $('#lbNext').addEventListener('click', function () { stepLb(1); });
-  lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
-  document.addEventListener('keydown', function (e) {
-    if (lb.hidden) return;
-    if (e.key === 'Escape') closeLb();
-    if (e.key === 'ArrowLeft') stepLb(-1);
-    if (e.key === 'ArrowRight') stepLb(1);
-  });
+  var lbc = $('#lbClose'); if (lbc) lbc.addEventListener('click', closeLb);
+  var lbp = $('#lbPrev'); if (lbp) lbp.addEventListener('click', function () { stepLb(-1); });
+  var lbn = $('#lbNext'); if (lbn) lbn.addEventListener('click', function () { stepLb(1); });
+  if (lb) {
+    lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
+    document.addEventListener('keydown', function (e) {
+      if (lb.hidden) return;
+      if (e.key === 'Escape') closeLb();
+      if (e.key === 'ArrowLeft') stepLb(-1);
+      if (e.key === 'ArrowRight') stepLb(1);
+    });
+  }
 
   /* ---------------- accordion: close others ---------------- */
   var accs = $$('.acc');
@@ -525,7 +559,7 @@
   var WA_URL = 'https://api.whatsapp.com/send?phone=352621523131&text=Bonjour%20je%20souhaite%20avec%20plus%20d\u2019informations%20';
   var CONCIERGE = (function () {
     var ig = 'https://www.instagram.com/customink_tattoostudio/';
-    var hand = 'For anything personal, the team replies fast \u2014 <a href="' + WA_URL + '" target="_blank" rel="noopener">WhatsApp</a>, <a href="tel:+35226550766">+352 26 55 07 66</a>, <a href="mailto:info@customink.lu">info@customink.lu</a>, or the <a href="#book">booking form</a>.';
+    var hand = 'For anything personal, the team replies fast \u2014 <a href="' + WA_URL + '" target="_blank" rel="noopener">WhatsApp</a>, <a href="tel:+35226550766">+352 26 55 07 66</a>, <a href="mailto:info@customink.lu?body=Hi%2C%20i%20would%20like%20to%20receive%20a%20call%20to%20talk%20more%20about%20the%20services">info@customink.lu</a>, or the <a href="#book">booking form</a>.';
     var KB = [
       { k: ['hello', ' hi', 'hey', 'good morning', 'good afternoon', 'good evening'],
         a: 'Hey, welcome to Custom Ink \u2733 I know the studio inside out \u2014 styles, piercing, booking, hours, prices, aftercare. What can I point you to?',
@@ -606,7 +640,7 @@
         a: 'Gift vouchers aren\u2019t on the site yet \u2014 best to ask the team directly, they\u2019ll tell you what\u2019s possible:',
         n: ['Opening hours'], hand: true },
       { k: ['contact', 'email', 'phone', 'call', 'number'],
-        a: 'All roads lead to the team: <a href="' + WA_URL + '" target="_blank" rel="noopener">WhatsApp</a> \u00b7 <a href="tel:+35226550766">+352 26 55 07 66</a> \u00b7 <a href="mailto:info@customink.lu">info@customink.lu</a> \u00b7 <a href="#book">booking form</a>.',
+        a: 'All roads lead to the team: <a href="' + WA_URL + '" target="_blank" rel="noopener">WhatsApp</a> \u00b7 <a href="tel:+35226550766">+352 26 55 07 66</a> \u00b7 <a href="mailto:info@customink.lu?body=Hi%2C%20i%20would%20like%20to%20receive%20a%20call%20to%20talk%20more%20about%20the%20services">info@customink.lu</a> \u00b7 <a href="#book">booking form</a>.',
         n: ['Opening hours', 'How do I book?'] },
       { k: ['bonjour', 'salut', 'moien', 'bonsoir', 'coucou'],
         a: 'Bonjour et bienvenue chez Custom Ink \u2733 Je connais le studio sur le bout des doigts \u2014 styles, piercing, r\u00e9servation, horaires, prix, soins. Que puis-je pour vous ?',
@@ -621,7 +655,7 @@
         a: 'Custom Ink Luxembourg, 103 Waistrooss, L-5440 Remerschen \u2014 dans la r\u00e9gion de la Moselle, au sud-est du Luxembourg. Utilisez la carte interactive dans la section <a href="#visit">Visiter</a> : \u00ab Fetch my location \u00bb trace votre itin\u00e9raire.',
         n: ['Horaires', 'R\u00e9server'] }
     ];
-    var FALLBACK = 'That one is best answered directly by the studio team: <a href="' + WA_URL + '" target="_blank" rel="noopener">WhatsApp</a> · <a href="tel:+35226550766">+352 26 55 07 66</a> · <a href="mailto:info@customink.lu">info@customink.lu</a>. Reach out directly and the team will be happy to assist you.';
+    var FALLBACK = 'That one is best answered directly by the studio team: <a href="' + WA_URL + '" target="_blank" rel="noopener">WhatsApp</a> · <a href="tel:+35226550766">+352 26 55 07 66</a> · <a href="mailto:info@customink.lu?body=Hi%2C%20i%20would%20like%20to%20receive%20a%20call%20to%20talk%20more%20about%20the%20services">info@customink.lu</a>. Reach out directly and the team will be happy to assist you.';
     var DEFAULT_CHIPS = ['Tattoo styles', 'Piercing', 'How do I book?', 'Prices', 'Opening hours'];
     function match(q) {
       q = ' ' + q.toLowerCase() + ' ';
@@ -728,7 +762,10 @@
     botSay(CONCIERGE.answer(text), CONCIERGE.nextFor(text));
   }
   function openConc() {
+    if (!panel || !fab) return;
     panel.hidden = false;
+    void panel.offsetHeight;
+    panel.classList.add('is-open');
     fab.setAttribute('aria-expanded', 'true');
     if (concDot) concDot.remove();
     if (!greeted) {
@@ -740,15 +777,23 @@
     track('concierge_open');
   }
   function closeConc() {
+    if (!panel || !fab) return;
     panel.hidden = true;
+    panel.classList.remove('is-open');
     fab.setAttribute('aria-expanded', 'false');
     try { fab.focus(); } catch (e) {}
   }
-  fab.addEventListener('click', function () { panel.hidden ? openConc() : closeConc(); });
-  var cc = $('#concClose'); if (cc) cc.addEventListener('click', closeConc);
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && !panel.hidden) closeConc();
-  });
+  if (fab && panel) {
+    fab.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      panel.hidden ? openConc() : closeConc();
+    });
+    var cc = $('#concClose'); if (cc) cc.addEventListener('click', closeConc);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !panel.hidden) closeConc();
+    });
+  }
 
   if (concForm) {
     concForm.addEventListener('submit', function (e) {
@@ -955,7 +1000,7 @@
      Routing via OSRM public demo server; basemap CARTO light (monochrome). */
   (function () {
     var SHOP = { lat: 49.4870753, lng: 6.3530326 };
-    var mapEl = $('#map'), btn = $('#locateBtn'), statusEl = $('#mapStatus');
+    var mapEl = $('#map'), btn = $('#locateBtn'), statusEl = $('#mapStatus'), mapCard = $('#mapCard');
     if (!mapEl || !btn || !statusEl) return;
 
     var map = null, userMarker = null, routeLine = null, shopMarker = null;
@@ -967,12 +1012,13 @@
       return L.divIcon({ className: '', html: '<span class="ci-user-pin"></span>', iconSize: [14, 14], iconAnchor: [7, 7] });
     }
     function initMap() {
+      if (map || !window.L) return;
       var isMobile = ('ontouchstart' in window) && window.innerWidth < 768;
       map = L.map('map', {
         scrollWheelZoom: false,
         zoomControl: true,
         dragging: !isMobile,
-        tap: !isMobile
+        tap: false
       });
       map.setView([SHOP.lat, SHOP.lng], 14);
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -980,6 +1026,12 @@
         maxZoom: 19
       }).addTo(map);
       shopMarker = L.marker([SHOP.lat, SHOP.lng], { icon: shopIcon(), title: 'Custom Ink Luxembourg' }).addTo(map);
+
+      // Prevent Leaflet from swallowing touch / click events on the locate card
+      if (mapCard && window.L && L.DomEvent) {
+        L.DomEvent.disableClickPropagation(mapCard);
+        L.DomEvent.disableScrollPropagation(mapCard);
+      }
     }
 
     /* init lazily when the map first scrolls into view (Leaflet loads deferred) */
@@ -1004,11 +1056,16 @@
     function resetBtn(text) { btn.disabled = false; btn.textContent = text; }
 
     function showRoute(pos) {
-      if (!map) { setStatus('The map is still loading — one moment.'); resetBtn('Fetch my location'); return; }
+      if (!map && window.L) initMap();
+      if (!map) {
+        setStatus('The map is initializing — please try in a moment.');
+        resetBtn('Fetch my location');
+        return;
+      }
       var lat = pos.coords.latitude, lng = pos.coords.longitude;
       if (userMarker) map.removeLayer(userMarker);
       userMarker = L.marker([lat, lng], { icon: userIcon(), title: 'You are here' }).addTo(map);
-      setStatus('Drawing your route…');
+      setStatus('Drawing your route to the studio…');
       var url = 'https://router.project-osrm.org/route/v1/driving/' +
         lng + ',' + lat + ';' + SHOP.lng + ',' + SHOP.lat + '?overview=full&geometries=geojson';
       fetch(url)
@@ -1036,25 +1093,42 @@
         });
     }
 
-    btn.addEventListener('click', function () {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!map && window.L) initMap();
       btn.disabled = true;
       btn.textContent = 'Locating…';
-      setStatus('Requesting your location…');
+      setStatus('Requesting your location from browser…');
       track('map_locate');
       if (!navigator.geolocation) {
-        setStatus('Geolocation is not supported here — use Google Maps directions instead.');
+        setStatus('Geolocation is not supported in this browser — use Google Maps directions instead.');
         resetBtn('Fetch my location');
         return;
       }
-      navigator.geolocation.getCurrentPosition(showRoute, function (err) {
-        var why = err && err.code === 1 ? ' — permission denied' : err && err.code === 3 ? ' — timed out' : '';
-        setStatus('Location unavailable' + why + '. Allow location access, or use Google Maps directions instead.');
-        resetBtn('Try again');
-      }, { enableHighAccuracy: false, timeout: 12000, maximumAge: 60000 });
+      navigator.geolocation.getCurrentPosition(
+        function (pos) {
+          showRoute(pos);
+        },
+        function (err) {
+          var why = '';
+          if (err) {
+            if (err.code === 1) why = ' (permission denied)';
+            else if (err.code === 2) why = ' (position unavailable)';
+            else if (err.code === 3) why = ' (timed out)';
+          }
+          setStatus('Location access unavailable' + why + '. Please allow location access or use Google Maps.');
+          resetBtn('Try again');
+        },
+        { enableHighAccuracy: true, timeout: 8000, maximumAge: 30000 }
+      );
     });
 
     /* test hook: draw a route from fixed coordinates without geolocation */
-    window.__mapTestRoute = function (lat, lng) { showRoute({ coords: { latitude: lat, longitude: lng } }); };
+    window.__mapTestRoute = function (lat, lng) {
+      if (!map && window.L) initMap();
+      showRoute({ coords: { latitude: lat, longitude: lng } });
+    };
   })();
 
   /* ---------------- portfolio placement typewriter loop ---------------- */
@@ -1242,5 +1316,17 @@
       resizeTimer = setTimeout(renderWall, 150);
     });
   })();
+
+  /* ---------------- global mailto body interceptor ---------------- */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[href*="info@customink.lu"]');
+    if (!a) return;
+    var defaultBody = 'Hi, i would like to receive a call to talk more about the services';
+    var href = a.getAttribute('href') || '';
+    if (href.indexOf('mailto:info@customink.lu') !== -1 && href.indexOf('body=') === -1) {
+      var sep = href.indexOf('?') === -1 ? '?' : '&';
+      a.setAttribute('href', href + sep + 'body=' + encodeURIComponent(defaultBody));
+    }
+  });
 })();
 
