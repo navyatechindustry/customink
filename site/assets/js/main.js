@@ -2,6 +2,8 @@
    CUSTOM INK LUXEMBOURG — interactions
    nav / reveals / filters / lightbox / form / concierge / analytics
    ============================================================ */
+import { reviews as datasetReviews } from './reviews-data.js';
+
 (function () {
   'use strict';
 
@@ -850,10 +852,25 @@
   })();
 
 /* ---------------- feedback wall builder ---------------- */
-  (function () {
-    var data = window.FB_REVIEWS || [];
+  function initFeedbackWall() {
+    var data = (Array.isArray(datasetReviews) && datasetReviews.length)
+      ? datasetReviews
+      : (Array.isArray(window.FB_REVIEWS) && window.FB_REVIEWS.length)
+        ? window.FB_REVIEWS
+        : [];
     var container = document.getElementById('fbwallCols');
-    if (!container || !data.length) return;
+    if (!container) return;
+
+    if (!data.length) {
+      container.innerHTML =
+        '<div class="fbwall-fallback" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:48px 20px; text-align:center; min-height:200px; background:#141414; border-radius:12px; margin:16px 0;">' +
+          '<span style="color:#D6A84F; font-size:22px; letter-spacing:3px; margin-bottom:10px;" aria-label="5 stars">★★★★★</span>' +
+          '<p style="color:#F5F2EA; font-family:var(--disp); font-size:20px; text-transform:uppercase; margin:0 0 8px;">4.9 · 377 Google Reviews</p>' +
+          '<p style="color:#A5A096; font-size:13.5px; max-width:480px; margin:0 0 16px;">Verified client reviews from the Custom Ink studio profile in Luxembourg.</p>' +
+          '<a href="https://www.google.com/maps/search/?api=1&query=Custom+Ink+Luxembourg+103+Waistrooss+Remerschen" target="_blank" rel="noopener" class="btn btn-gold btn-sm" style="display:inline-block; padding:10px 18px; font-size:11px;">Read all reviews on Google Maps →</a>' +
+        '</div>';
+      return;
+    }
 
     /* Development-time validation */
     if (window.console && console.assert) {
@@ -864,7 +881,7 @@
     }
 
     function esc(x) {
-      return String(x)
+      return String(x == null ? '' : x)
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
@@ -880,28 +897,41 @@
 
     function createCard(r, isDup) {
       var card = document.createElement('article');
-      card.className = 'review-card fb-card' + (r.x ? '' : ' fb-card--rating');
+      var rawText = (r.text || r.x || '').trim();
+      var hasText = rawText.length > 0;
+      card.className = 'review-card fb-card' + (hasText ? '' : ' fb-card--rating');
       if (isDup) {
         card.setAttribute('aria-hidden', 'true');
       }
 
-      var stars = '<span class="fb-stars-row" aria-label="5 stars" title="5 stars on Google">★★★★★</span>';
-      var textHtml = r.x
-        ? '<blockquote class="fb-text">“' + esc(r.x) + '”</blockquote>'
-        : '<p class="fb-text fb-text--empty">Verified 5-star studio experience</p>';
+      var name = (r.name || r.n || 'Anonymous').trim();
+      var dateStr = (r.date || r.t || '').trim();
+      var sourceName = (r.source || 'Google').trim();
+      var rating = typeof r.rating === 'number' ? r.rating : 5;
+      var starsStr = '★'.repeat(Math.max(1, Math.min(5, rating))) + '☆'.repeat(Math.max(0, 5 - rating));
+
+      var starsHtml = '<span class="fb-stars-row" aria-label="' + rating + ' stars" title="' + rating + ' stars on ' + esc(sourceName) + '">' + starsStr + '</span>';
+      var sourceHtml = '<span class="fb-source-tag">' + esc(sourceName) + ' Review</span>';
+
+      var textHtml = hasText
+        ? '<blockquote class="fb-text">“' + esc(rawText) + '”</blockquote>'
+        : '<p class="fb-text fb-text--empty">' + rating + '-star ' + esc(sourceName) + ' studio experience</p>';
+
+      var metaDetails = [];
+      if (dateStr) metaDetails.push(esc(dateStr));
 
       card.innerHTML =
         '<div class="fb-card-inner">' +
           '<header class="fb-top-row">' +
-            stars +
-            '<span class="fb-source-tag">Google Review</span>' +
+            starsHtml +
+            sourceHtml +
           '</header>' +
           textHtml +
           '<footer class="fb-footer">' +
-            '<div class="fb-ava" aria-hidden="true"><span>' + esc(initials(r.n)) + '</span></div>' +
+            '<div class="fb-ava" aria-hidden="true"><span>' + esc(initials(name)) + '</span></div>' +
             '<div class="fb-who">' +
-              '<cite>' + esc(r.n) + '</cite>' +
-              (r.t ? '<span>' + esc(r.t) + '</span>' : '') +
+              '<cite>' + esc(name) + '</cite>' +
+              (metaDetails.length ? '<span>' + metaDetails.join(' · ') + '</span>' : '') +
             '</div>' +
           '</footer>' +
         '</div>';
@@ -924,10 +954,6 @@
 
       container.innerHTML = '';
 
-      // All three columns move continuously BOTTOM -> TOP (upward) at a gentle, readable pace
-      // Desktop (3 cols): Column 1 = 300s (~5min), Column 2 = 360s (~6min), Column 3 = 330s (~5.5min)
-      // Tablet (2 cols): Column 1 = 310s, Column 2 = 370s
-      // Mobile (1 col): Column 1 = 340s
       var durations = [];
       if (cols === 3) {
         durations = [300, 360, 330];
@@ -981,7 +1007,13 @@
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(renderWall, 150);
     });
-  })();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFeedbackWall);
+  } else {
+    initFeedbackWall();
+  }
 
 /* ---------------- footer year ---------------- */
   var y = $('#year'); if (y) y.textContent = new Date().getFullYear();
@@ -1173,138 +1205,6 @@
       }
 
       setTimeout(step, initialDelay);
-    });
-  })();
-
-  /* ---------------- feedback wall builder ---------------- */
-  (function initFeedbackWall() {
-    var data = window.FB_REVIEWS || [];
-    var container = document.getElementById('fbwallCols');
-    if (!container || !data.length) return;
-
-    function esc(x) {
-      return String(x)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    }
-
-    function initials(n) {
-      var parts = (n || '').trim().split(/\s+/);
-      var a = (parts[0] || '').charAt(0);
-      var b = parts.length > 1 ? parts[parts.length - 1].charAt(0) : '';
-      return ((a + b) || 'CI').toUpperCase();
-    }
-
-    function createCard(r, isDup) {
-      var li = document.createElement('li');
-      li.className = 'review-card fb-card' + (r.x ? '' : ' fb-card--rating');
-      if (isDup) {
-        li.setAttribute('aria-hidden', 'true');
-      }
-
-      var stars = '<span class="fb-stars-row" aria-label="5 stars" title="5 stars on Google">★★★★★</span>';
-      var textHtml = r.x
-        ? '<blockquote class="fb-text">“' + esc(r.x) + '”</blockquote>'
-        : '<p class="fb-text fb-text--empty">Verified 5-star studio experience</p>';
-
-      li.innerHTML =
-        '<article class="fb-card-inner">' +
-          '<header class="fb-top-row">' +
-            stars +
-            '<span class="fb-source-tag">Google Review</span>' +
-          '</header>' +
-          textHtml +
-          '<footer class="fb-footer">' +
-            '<div class="fb-ava" aria-hidden="true"><span>' + esc(initials(r.n)) + '</span></div>' +
-            '<div class="fb-who">' +
-              '<cite>' + esc(r.n) + '</cite>' +
-              (r.t ? '<span>' + esc(r.t) + '</span>' : '') +
-            '</div>' +
-          '</footer>' +
-        '</article>';
-      return li;
-    }
-
-    var currentCols = -1;
-
-    function getTargetColCount() {
-      var w = window.innerWidth;
-      if (w > 960) return 3;
-      if (w > 600) return 2;
-      return 1;
-    }
-
-    function renderWall() {
-      var cols = getTargetColCount();
-      if (cols === currentCols) return;
-      currentCols = cols;
-
-      container.innerHTML = '';
-
-      // Slow, smooth durations staggered across columns for natural movement
-      var durations = [];
-      if (cols === 3) {
-        durations = ['300s', '360s', '330s'];
-      } else if (cols === 2) {
-        durations = ['310s', '350s'];
-      } else {
-        durations = ['330s'];
-      }
-
-      var groupA_list = [];
-      var groupB_list = [];
-
-      for (var c = 0; c < cols; c++) {
-        var colDiv = document.createElement('div');
-        colDiv.className = 'review-column fb-col fb-col-' + (c + 1);
-
-        var track = document.createElement('div');
-        track.className = 'review-track fb-track fb-dir-up';
-        track.style.setProperty('--dur', durations[c]);
-        track.style.animationDuration = durations[c];
-
-        var groupA = document.createElement('ul');
-        groupA.className = 'review-group';
-
-        var groupB = document.createElement('ul');
-        groupB.className = 'review-group';
-        groupB.setAttribute('aria-hidden', 'true');
-
-        track.appendChild(groupA);
-        track.appendChild(groupB);
-        colDiv.appendChild(track);
-        container.appendChild(colDiv);
-
-        groupA_list.push(groupA);
-        groupB_list.push(groupB);
-      }
-
-      // Distribute EVERY single review across the visible columns (i % cols)
-      // All 377 authentic reviews are included with none omitted
-      for (var i = 0; i < data.length; i++) {
-        var targetA = groupA_list[i % cols];
-        targetA.appendChild(createCard(data[i], false));
-      }
-
-      // Duplicate each column's list into group B for the 100% seamless infinite loop
-      for (var c = 0; c < cols; c++) {
-        var items = groupA_list[c].children;
-        for (var j = 0; j < items.length; j++) {
-          var clone = items[j].cloneNode(true);
-          clone.setAttribute('aria-hidden', 'true');
-          groupB_list[c].appendChild(clone);
-        }
-      }
-    }
-
-    renderWall();
-
-    var resizeTimer = null;
-    window.addEventListener('resize', function () {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(renderWall, 150);
     });
   })();
 
